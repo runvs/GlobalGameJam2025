@@ -1,43 +1,50 @@
-﻿#ifndef GAME_STATE_GAME_HPP
-#define GAME_STATE_GAME_HPP
+﻿#ifndef STATE_GAME
+#define STATE_GAME
 
+#include <box2dwrapper/box2d_object.hpp>
 #include <box2dwrapper/box2d_world_interface.hpp>
+#include <contact_callback_player_enemy.hpp>
+#include <contact_callback_player_ground.hpp>
 #include <game_state.hpp>
-#include <memory>
-#include <vector>
-
-// fwd decls
-namespace jt {
-class Shape;
-class Sprite;
-class Vignette;
-} // namespace jt
-
-class Hud;
+#include <level.hpp>
+#include <particle_system.hpp>
+#include <player.hpp>
+#include <screeneffects/vignette.hpp>
+#include <shape.hpp>
+#include <tilemap/tile_layer.hpp>
+#include <vector.hpp>
 
 class StateGame : public jt::GameState {
 public:
-    std::string getName() const override;
+    explicit StateGame(std::string const& levelName = "platformer_0_0.json");
 
 private:
-    std::shared_ptr<jt::Shape> m_background;
-    std::shared_ptr<jt::Vignette> m_vignette;
-    std::shared_ptr<Hud> m_hud;
     std::shared_ptr<jt::Box2DWorldInterface> m_world { nullptr };
-    
-    bool m_running { true };
-    bool m_hasEnded { false };
 
-    int m_scoreP1 { 0 };
-    int m_scoreP2 { 0 };
+    std::string m_levelName { "" };
+
+    std::shared_ptr<Level> m_level { nullptr };
+    std::shared_ptr<Player> m_player { nullptr };
+    std::shared_ptr<jt::Vignette> m_vignette { nullptr };
+
+    std::shared_ptr<jt::ParticleSystem<jt::Shape, 50>> m_walkParticles { nullptr };
+    std::shared_ptr<jt::ParticleSystem<jt::Shape, 50>> m_playerJumpParticles { nullptr };
+
+    bool m_ending { false };
+
+    std::string getName() const override;
 
     void onCreate() override;
     void onEnter() override;
-    void onUpdate(float const elapsed) override;
+    void onUpdate(float const /*elapsed*/) override;
     void onDraw() const override;
 
+    void CreatePlayer();
+    void loadLevel();
+    void handleCameraScrolling(float const elapsed);
     void endGame();
-    void createPlayer();
+    void createPlayerWalkParticles();
+    void createPlayerJumpParticleSystem();
 };
 
-#endif
+#endif // STATE_GAME

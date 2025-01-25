@@ -135,7 +135,7 @@ void Level::loadLevelCollisions(jt::tilemap::TilesonLoader& loader)
 void Level::loadLevelTileLayer(jt::tilemap::TilesonLoader& loader)
 {
     m_tileLayerGround = std::make_shared<jt::tilemap::TileLayer>(
-        loader.loadTilesFromLayer("ground", textureManager(), "assets/test/integration/demo/"));
+        loader.loadTilesFromLayer("ground", textureManager(), "assets/"));
 }
 
 void Level::loadLevelSettings(jt::tilemap::TilesonLoader& loader)

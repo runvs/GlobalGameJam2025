@@ -15,13 +15,11 @@ void Killbox::doCreate()
 {
     if (m_type == "spike_down") {
         m_drawable = std::make_shared<jt::Sprite>(
-            "assets/test/integration/demo/V3_complete_Tileset_8x8.png", jt::Recti { 112, 40, 8, 8 },
-            textureManager());
+            "assets/V3_complete_Tileset_8x8.png", jt::Recti { 112, 40, 8, 8 }, textureManager());
 
     } else if (m_type == "spike_up") {
         m_drawable = std::make_shared<jt::Sprite>(
-            "assets/test/integration/demo/V3_complete_Tileset_8x8.png", jt::Recti { 120, 40, 8, 8 },
-            textureManager());
+            "assets/V3_complete_Tileset_8x8.png", jt::Recti { 120, 40, 8, 8 }, textureManager());
     }
 }
 
