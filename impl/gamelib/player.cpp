@@ -61,7 +61,6 @@ void Player::doUpdate(float const elapsed)
 
     m_animation->setPosition(currentPosition);
     updateAnimation(elapsed);
-    updateWalkingParticles(elapsed);
     handleMovement(elapsed);
 
     m_wasTouchingGroundLastFrame = m_isTouchingGround;
@@ -81,20 +80,6 @@ void Player::clampPositionToLevelSize(jt::Vector2f& currentPosition) const
         currentPosition.x = m_levelSizeInTiles.x - playerWidth;
     }
     // TODO clamp in Y as well
-}
-
-void Player::updateWalkingParticles(float elapsed)
-{
-    m_walkParticlesTimer -= elapsed;
-    if (m_walkParticlesTimer <= 0) {
-        m_walkParticlesTimer = 0.15f;
-        if (m_isMoving && m_isTouchingGround) {
-            auto ps = m_walkParticles.lock();
-            if (ps) {
-                ps->fire(1, getPosition());
-            }
-        }
-    }
 }
 
 void Player::updateAnimation(float elapsed)
@@ -154,16 +139,6 @@ jt::Vector2f Player::getPosOnScreen() const { return m_animation->getScreenPosit
 void Player::setPosition(jt::Vector2f const& pos) { m_physicsObject->setPosition(pos); }
 
 jt::Vector2f Player::getPosition() const { return m_physicsObject->getPosition(); }
-
-void Player::setWalkParticleSystem(std::weak_ptr<jt::ParticleSystem<jt::Shape, 50>> ps)
-{
-    m_walkParticles = ps;
-}
-
-void Player::setJumpParticleSystem(std::weak_ptr<jt::ParticleSystem<jt::Shape, 50>> ps)
-{
-    m_postJumpParticles = ps;
-}
 
 void Player::setLevelSize(jt::Vector2f const& levelSizeInTiles)
 {

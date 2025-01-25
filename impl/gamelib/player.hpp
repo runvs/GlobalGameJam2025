@@ -33,9 +33,6 @@ public:
     void setPosition(jt::Vector2f const& pos);
     jt::Vector2f getPosition() const;
 
-    void setWalkParticleSystem(std::weak_ptr<jt::ParticleSystem<jt::Shape, 50>> ps);
-    void setJumpParticleSystem(std::weak_ptr<jt::ParticleSystem<jt::Shape, 50>> ps);
-
     void setLevelSize(jt::Vector2f const& levelSizeInTiles);
 
     void resetVelocity() const;
@@ -43,9 +40,6 @@ public:
 private:
     std::shared_ptr<jt::Animation> m_animation;
     std::shared_ptr<jt::Box2DObject> m_physicsObject;
-    float m_walkParticlesTimer = 0.0f;
-    std::weak_ptr<jt::ParticleSystem<jt::Shape, 50>> m_walkParticles;
-    std::weak_ptr<jt::ParticleSystem<jt::Shape, 50>> m_postJumpParticles;
 
     bool m_isTouchingGround { false };
     bool m_wasTouchingGroundLastFrame { false };
@@ -73,7 +67,6 @@ private:
     void updateAnimation(float elapsed);
     InputState queryInput();
     void clampPositionToLevelSize(jt::Vector2f& currentPosition) const;
-    void updateWalkingParticles(float elapsed);
     bool m_horizontalMovement { false };
 };
 
