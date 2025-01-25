@@ -6,11 +6,19 @@ PowerUp::PowerUp(jt::tilemap::InfoRect const& rect) { m_info = rect; }
 
 void PowerUp::doCreate()
 {
-    // TODO new sprite
-    auto const type = m_info.properties.strings.at("type");
     m_animation = std::make_shared<jt::Animation>();
-    m_animation->loadFromAseprite("assets/soap.aseprite", textureManager());
-    m_animation->play("idle");
+    auto const type = m_info.properties.strings.at("type");
+    if (type == "soap") {
+        m_animation->loadFromAseprite("assets/soap.aseprite", textureManager());
+        m_animation->play("idle");
+        m_type = ePowerUpType::SOAP;
+    } else if (type == "patch") {
+        // TODO load patch icon
+        m_animation->loadFromAseprite("assets/soap.aseprite", textureManager());
+        m_animation->play("idle");
+        m_type = ePowerUpType::PATCH;
+    }
+
     m_animation->setOffset(jt::OffsetMode::CENTER);
 
     m_animation->setPosition(m_info.position);

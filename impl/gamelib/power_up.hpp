@@ -9,6 +9,7 @@
 
 enum class ePowerUpType : std::uint8_t {
     SOAP,
+    PATCH,
 };
 
 class PowerUp : public jt::GameObject {

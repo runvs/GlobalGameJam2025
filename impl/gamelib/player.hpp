@@ -32,6 +32,8 @@ public:
 
     void resetBubbleVolume();
 
+    void addPatches();
+
 private:
     std::shared_ptr<jt::Animation> m_animation;
     std::shared_ptr<jt::Animation> m_bubble;
@@ -70,6 +72,8 @@ private:
     void updateAnimation(float elapsed);
     void clampPositionToLevelSize(jt::Vector2f& currentPosition) const;
     bool m_horizontalMovement { false };
+
+    int m_patchesAvailable { 2 };
 };
 
 #endif // JAMTEMPLATE_DEMO_PLATFORM_PLAYER

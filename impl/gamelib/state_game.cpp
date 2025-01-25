@@ -12,7 +12,6 @@
 #include <state_menu.hpp>
 #include <tweens/tween_alpha.hpp>
 #include <tweens/tween_position.hpp>
-#include <tweens/tween_rotation.hpp>
 
 StateGame::StateGame(std::string const& levelName) { m_levelName = levelName; }
 
@@ -105,9 +104,12 @@ void StateGame::onUpdate(float const elapsed)
         });
         m_level->checkIfPlayerIsInPowerup(
             m_player->getPosition(), [this](ePowerUpType t, PowerUp* pu) {
-                if (t == ePowerUpType::SOAP) {
+                if (pu->getPowerUpType() == ePowerUpType::SOAP) {
                     m_player->resetBubbleVolume();
+                } else if (pu->getPowerUpType() == ePowerUpType::PATCH) {
+                    m_player->addPatches();
                 }
+
                 add(jt::TweenScale::create(
                     pu->getDrawable(), 0.5f, jt::Vector2f { 1.0f, 1.0f }, { 2.0f, 2.0f }));
                 auto twa = jt::TweenAlpha::create(pu->getDrawable(), 0.5f, 255u, 0u);

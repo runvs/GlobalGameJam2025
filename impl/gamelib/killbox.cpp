@@ -1,10 +1,8 @@
-
 #include "killbox.hpp"
-
 #include "game_properties.hpp"
-#include <sprite.hpp>
 #include <game_interface.hpp>
 #include <math_helper.hpp>
+#include <sprite.hpp>
 
 Killbox::Killbox(jt::Rectf const& rect, std::string const& name, std::string const& type)
     : m_rect { rect }

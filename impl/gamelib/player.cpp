@@ -196,15 +196,18 @@ void Player::handleMovement(float const elapsed)
                     m_velocities.push_back(-1.0f * m_indicatorVec);
                     m_hasStabbed = true;
                 }
-                if (gp->justPressed(jt::GamepadButtonCode::GBB)) {
-                    m_punctureTimer = GP::PlayerInputPunctureDeadTime();
-                    auto controllerVec = -1.0f * m_indicatorVec;
 
-                    std::erase_if(m_velocities, [controllerVec](auto const& v) {
-                        auto dist = jt::MathHelper::length(controllerVec - v);
-                        // std::cout << dist << std::endl;
-                        return dist < 0.25f;
-                    });
+                if (gp->justPressed(jt::GamepadButtonCode::GBB)) {
+                    if (m_patchesAvailable > 0) {
+                        m_patchesAvailable -= 1;
+                        m_punctureTimer = GP::PlayerInputPunctureDeadTime();
+                        auto controllerVec = -1.0f * m_indicatorVec;
+
+                        std::erase_if(m_velocities, [controllerVec](auto const& v) {
+                            auto dist = jt::MathHelper::length(controllerVec - v);
+                            return dist < 0.25f;
+                        });
+                    }
                 }
             }
         }
@@ -263,3 +266,5 @@ void Player::resetVelocity() const { m_physicsObject->setVelocity({ 0, 0 }); }
 bool Player::isInBubble() const { return m_bubbleVolume >= 0.0f; }
 
 void Player::resetBubbleVolume() { m_bubbleVolume = 1.0f; }
+
+void Player::addPatches() { m_patchesAvailable += 2; }
