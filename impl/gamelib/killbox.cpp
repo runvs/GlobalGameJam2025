@@ -17,11 +17,16 @@ void Killbox::doCreate()
 {
     if (m_type == "spike_down") {
         m_drawable = std::make_shared<jt::Sprite>(
-            "assets/V3_complete_Tileset_8x8.png", jt::Recti { 112, 40, 8, 8 }, textureManager());
-
+            "assets/tileset.png", jt::Recti { 64, 144, 8, 8 }, textureManager());
     } else if (m_type == "spike_up") {
         m_drawable = std::make_shared<jt::Sprite>(
-            "assets/V3_complete_Tileset_8x8.png", jt::Recti { 120, 40, 8, 8 }, textureManager());
+            "assets/tileset.png", jt::Recti { 16, 128, 16, 16 }, textureManager());
+    } else if (m_type == "spike_left") {
+        m_drawable = std::make_shared<jt::Sprite>(
+            "assets/tileset.png", jt::Recti { 96, 112, 16, 16 }, textureManager());
+    } else if (m_type == "spike_right") {
+        m_drawable = std::make_shared<jt::Sprite>(
+            "assets/tileset.png", jt::Recti { 112, 112, 16, 16 }, textureManager());
     }
 }
 
@@ -40,6 +45,14 @@ void Killbox::doDraw() const
             for (int i = 0; i != numberOfParts; ++i) {
                 m_drawable->setPosition(
                     jt::Vector2f { m_rect.left + i * 16.0f, m_rect.top + 0.0f });
+                m_drawable->update(0.0f);
+                m_drawable->draw(renderTarget());
+            }
+        } else if (m_type == "spike_left" || m_type == "spike_right") {
+            auto numberOfParts = static_cast<int>(m_rect.height) / 16;
+            for (int i = 0; i != numberOfParts; ++i) {
+                m_drawable->setPosition(
+                    jt::Vector2f { m_rect.left + 0.0f, m_rect.top + i * 16.0f });
                 m_drawable->update(0.0f);
                 m_drawable->draw(renderTarget());
             }

@@ -46,16 +46,19 @@ void MovingPlatform::doCreate()
     std::cout << m_type << std::endl;
 
     if (m_type == "horizontal" || m_type == "") {
-        m_spriteL = std::make_shared<jt::Sprite>("assets/platform_l.png", textureManager());
-        m_spriteM = std::make_shared<jt::Sprite>("assets/platform_m.png", textureManager());
-        m_spriteR = std::make_shared<jt::Sprite>("assets/platform_r.png", textureManager());
+        m_spriteL = std::make_shared<jt::Sprite>(
+            "assets/tileset.png", jt::Recti { 0, 32, 16, 16 }, textureManager());
+        m_spriteM = std::make_shared<jt::Sprite>(
+            "assets/tileset.png", jt::Recti { 16, 32, 16, 16 }, textureManager());
+        m_spriteR = std::make_shared<jt::Sprite>(
+            "assets/tileset.png", jt::Recti { 32, 32, 16, 16 }, textureManager());
     } else if (m_type == "vertical") {
         m_spriteT = std::make_shared<jt::Sprite>(
-            "assets/V3_complete_Tileset_8x8.png", jt::Recti { 80, 208, 8, 8 }, textureManager());
+            "assets/tileset.png", jt::Recti { 96, 48, 16, 16 }, textureManager());
         m_spriteM = std::make_shared<jt::Sprite>(
-            "assets/V3_complete_Tileset_8x8.png", jt::Recti { 80, 216, 8, 8 }, textureManager());
+            "assets/tileset.png", jt::Recti { 96, 64, 16, 16 }, textureManager());
         m_spriteB = std::make_shared<jt::Sprite>(
-            "assets/V3_complete_Tileset_8x8.png", jt::Recti { 80, 224, 8, 8 }, textureManager());
+            "assets/tileset.png", jt::Recti { 96, 80, 16, 16 }, textureManager());
     }
 }
 
@@ -132,44 +135,44 @@ void MovingPlatform::doUpdate(float const elapsed)
 void MovingPlatform::doDraw() const
 {
     if (m_type == "horizontal" || m_type == "") {
-        auto numberOfMiddlePartsY = static_cast<int>(m_platformSize.y) / 8;
+        auto numberOfMiddlePartsY = static_cast<int>(m_platformSize.y) / 16;
         for (int j = 0; j != numberOfMiddlePartsY; ++j) {
             m_spriteL->setPosition(
                 m_physicsObject->getPosition() + jt::Vector2f { 0.0f, j * 16.0f });
             m_spriteL->update(0.0f);
             m_spriteL->draw(renderTarget());
 
-            auto numberOfMiddlePartsX = static_cast<int>(m_platformSize.x) / 8 - 2;
+            auto numberOfMiddlePartsX = static_cast<int>(m_platformSize.x) / 16 - 2;
 
             for (int i = 0; i != numberOfMiddlePartsX; ++i) {
                 m_spriteM->setPosition(
-                    m_physicsObject->getPosition() + jt::Vector2f { (i + 1) * 8.0f, j * 16.0f });
+                    m_physicsObject->getPosition() + jt::Vector2f { (i + 1) * 16.0f, j * 16.0f });
                 m_spriteM->update(0.0f);
                 m_spriteM->draw(renderTarget());
             }
             m_spriteR->setPosition(
-                m_physicsObject->getPosition() + jt::Vector2f { m_platformSize.x - 8, j * 16.0f });
+                m_physicsObject->getPosition() + jt::Vector2f { m_platformSize.x - 16, j * 16.0f });
             m_spriteR->update(0.0f);
             m_spriteR->draw(renderTarget());
         }
     } else if (m_type == "vertical") {
-        auto numberOfMiddlePartsX = static_cast<int>(m_platformSize.x) / 8;
+        auto numberOfMiddlePartsX = static_cast<int>(m_platformSize.x) / 16;
         for (int i = 0; i != numberOfMiddlePartsX; ++i) {
             m_spriteT->setPosition(
                 m_physicsObject->getPosition() + jt::Vector2f { i * 16.0f, 0.0f });
             m_spriteT->update(0.0f);
             m_spriteT->draw(renderTarget());
 
-            auto numberOfMiddlePartsY = static_cast<int>(m_platformSize.y) / 8 - 2;
+            auto numberOfMiddlePartsY = static_cast<int>(m_platformSize.y) / 16 - 2;
 
             for (int j = 0; j != numberOfMiddlePartsY; ++j) {
                 m_spriteM->setPosition(
-                    m_physicsObject->getPosition() + jt::Vector2f { i * 16.0f, (j + 1) * 8.0f });
+                    m_physicsObject->getPosition() + jt::Vector2f { i * 16.0f, (j + 1) * 16.0f });
                 m_spriteM->update(0.0f);
                 m_spriteM->draw(renderTarget());
             }
             m_spriteB->setPosition(
-                m_physicsObject->getPosition() + jt::Vector2f { i * 16.0f, m_platformSize.y - 8 });
+                m_physicsObject->getPosition() + jt::Vector2f { i * 16.0f, m_platformSize.y - 16 });
             m_spriteB->update(0.0f);
             m_spriteB->draw(renderTarget());
         }
