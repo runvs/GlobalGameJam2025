@@ -344,6 +344,11 @@
                          "name":"era",
                          "type":"string",
                          "value":"cp"
+                        }, 
+                        {
+                         "name":"initial_patches",
+                         "type":"int",
+                         "value":5
                         }],
                  "rotation":0,
                  "type":"",
