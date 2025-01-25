@@ -67,17 +67,17 @@ void Player::doUpdate(float const elapsed)
     clampPositionToLevelSize(currentPosition);
     m_physicsObject->setPosition(currentPosition);
     m_animation->setPosition(currentPosition);
-    m_bubble->setPosition(currentPosition);
+    m_bubble->setPosition(currentPosition
+        + jt::Vector2f { std::sin(getAge() * 0.4123f) * 2.0f, std::sin(getAge() * 0.5f) * 4.0f });
 
     m_wasTouchingGroundLastFrame = m_isTouchingGround;
 
     m_lastTouchedGroundTimer -= elapsed;
 
-    m_bubbleVolume -= elapsed * m_velocities.size() * GP::BubbleVolumeLossFactor();
-
-    if (m_bubbleVolume >= 0.0f) {
+    if (isInBubble()) {
         int const index = std::clamp(static_cast<int>(m_bubbleVolume * 7), 0, 6);
         m_bubble->play("b" + std::to_string(index));
+        m_bubbleVolume -= elapsed * m_velocities.size() * GP::BubbleVolumeLossFactor();
     } else {
         if (m_bubble->getCurrentAnimationName() != "pop") {
             m_bubble->play("pop");
@@ -203,3 +203,5 @@ void Player::setLevelSize(jt::Vector2f const& levelSizeInTiles)
 }
 
 void Player::resetVelocity() const { m_physicsObject->setVelocity({ 0, 0 }); }
+
+bool Player::isInBubble() const { return m_bubbleVolume >= 0.0f; }

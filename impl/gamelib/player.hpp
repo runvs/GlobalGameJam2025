@@ -30,6 +30,8 @@ public:
 
     void resetVelocity() const;
 
+    bool isInBubble() const;
+
 private:
     std::shared_ptr<jt::Animation> m_animation;
     std::shared_ptr<jt::Animation> m_bubble;
