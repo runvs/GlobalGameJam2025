@@ -7,6 +7,8 @@
 #include <math_helper.hpp>
 #include <user_data_entries.hpp>
 
+#include <ranges>
+
 Player::Player(std::shared_ptr<jt::Box2DWorldInterface> world)
 {
     b2BodyDef bodyDef;
@@ -128,7 +130,16 @@ void Player::handleMovement(float const elapsed)
                 m_punctureTimer = GP::PlayerInputPunctureDeadTime();
                 m_velocities.push_back(-1.0f * m_indicatorVec);
             }
-            // if (gp->justPressed())
+            if (gp->justPressed(jt::GamepadButtonCode::GBB)) {
+                m_punctureTimer = GP::PlayerInputPunctureDeadTime();
+                auto controllerVec = -1.0f * m_indicatorVec;
+
+                std::erase_if(m_velocities, [controllerVec](auto const& v) {
+                    auto dist = jt::MathHelper::length(controllerVec - v);
+                    std::cout << dist << std::endl;
+                    return dist < 0.25f;
+                });
+            }
         }
     }
 
