@@ -40,6 +40,8 @@ private:
     std::shared_ptr<jt::Box2DObject> m_physicsObject;
     std::weak_ptr<jt::ParticleSystem<jt::Animation, 100>> m_exhaustParticleSystem;
 
+    bool m_cheatsActive { false };
+
     int m_particleFrameCount { 0 };
 
     float m_bubbleVolume { 1.0 };
@@ -63,6 +65,7 @@ private:
     void doUpdate(float const elapsed) override;
     void doDraw() const override;
 
+    void handleCheats(float const elapsed);
     void handleMovement(float const elapsed);
     void updateAnimation(float elapsed);
     void clampPositionToLevelSize(jt::Vector2f& currentPosition) const;

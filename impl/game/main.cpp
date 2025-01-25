@@ -94,6 +94,10 @@ int main(int /*argc*/, char* /*argv*/[])
     keyboard->listenForKey(jt::KeyCode::Escape);
     keyboard->listenForKey(jt::KeyCode::Space);
 
+    // cheats
+    keyboard->listenForKey(jt::KeyCode::F8);
+    keyboard->listenForKey(jt::KeyCode::J);
+
     auto const gamepad0 = std::make_shared<jt::GamepadInput>(0);
     auto const gamepad1 = std::make_shared<jt::GamepadInput>(1);
     jt::InputManager input { mouse, keyboard, { gamepad0, gamepad1 } };
