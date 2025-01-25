@@ -158,8 +158,9 @@ void Player::doDraw() const
         m_punctureIndicator->update(0.0f);
         m_punctureIndicator->draw(renderTarget());
     }
-
-    m_indicator->draw(renderTarget());
+    if (jt::MathHelper::length(m_indicatorVec) > 0.2f) {
+        m_indicator->draw(renderTarget());
+    }
 }
 
 void Player::setTouchesGround(bool touchingGround)
