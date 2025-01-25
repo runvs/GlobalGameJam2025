@@ -1,4 +1,7 @@
 #include "player.hpp"
+
+#include "drawable_helpers.hpp"
+#include "game_properties.hpp"
 #include <conversions.hpp>
 #include <game_interface.hpp>
 #include <line.hpp>
@@ -19,7 +22,10 @@ void Player::doCreate()
     m_animation = std::make_shared<jt::Animation>();
     m_animation->loadFromAseprite("assets/player.aseprite", textureManager());
     m_animation->play("idle");
-    m_animation->setOrigin({ 2, 4 });
+    m_animation->setOrigin(jt::OriginMode::CENTER);
+
+    m_indicator = jt::dh::createShapeRect({ 2.0f, 2.0f }, jt::colors::Black, textureManager());
+    m_indicator->setOrigin(jt::OriginMode::CENTER);
 
     b2FixtureDef fixtureDef;
     fixtureDef.density = 1.0f;
@@ -30,6 +36,7 @@ void Player::doCreate()
     auto playerCollider = m_physicsObject->getB2Body()->CreateFixture(&fixtureDef);
     playerCollider->SetUserData((void*)(g_userDataPlayerID));
 
+    // feet
     fixtureDef.isSensor = true;
     b2PolygonShape polygonShape;
     polygonShape.SetAsBox(3.0f, 0.2f, b2Vec2(0, 4), 0);
@@ -55,19 +62,17 @@ void Player::doUpdate(float const elapsed)
     m_footSensorFixture = m_physicsObject->getB2Body()->CreateFixture(&fixtureDef);
     m_footSensorFixture->SetUserData((void*)g_userDataPlayerFeetID);
 
+    updateAnimation(elapsed);
+    handleMovement(elapsed);
+
     auto currentPosition = m_physicsObject->getPosition();
     clampPositionToLevelSize(currentPosition);
     m_physicsObject->setPosition(currentPosition);
-
     m_animation->setPosition(currentPosition);
-    updateAnimation(elapsed);
-    handleMovement(elapsed);
 
     m_wasTouchingGroundLastFrame = m_isTouchingGround;
 
     m_lastTouchedGroundTimer -= elapsed;
-    m_lastJumpTimer -= elapsed;
-    m_wantsToJumpTimer -= elapsed;
 }
 
 void Player::clampPositionToLevelSize(jt::Vector2f& currentPosition) const
@@ -87,43 +92,67 @@ void Player::updateAnimation(float elapsed)
     // TODO update animation
     auto const rotated_velocity = m_physicsObject->getVelocity();
 
-    if (rotated_velocity.x > 0) {
-        m_animation->play("left");
-        m_isMoving = true;
-    } else if (rotated_velocity.x < 0) {
-        m_animation->play("right");
-        m_isMoving = true;
-    } else {
-        m_isMoving = false;
-    }
+    // if (rotated_velocity.x > 0) {
+    //     m_animation->play("left");
+    //     m_isMoving = true;
+    // } else if (rotated_velocity.x < 0) {
+    //     m_animation->play("right");
+    //     m_isMoving = true;
+    // } else {
+    //     m_isMoving = false;
+    // }
 
     m_animation->update(elapsed);
-}
-
-InputState Player::queryInput()
-{
-    InputState result = {};
-    auto const keyboard = getGame()->input().keyboard();
-
-    result.isLeftPressed = keyboard->pressed(jt::KeyCode::A);
-    result.isRightPressed = keyboard->pressed(jt::KeyCode::D);
-    result.isUpPressed = keyboard->pressed(jt::KeyCode::W);
-    result.isDownPressed = keyboard->pressed(jt::KeyCode::S);
-
-    auto const gamepad = getGame()->input().gamepad(0);
-
-    return result;
+    m_indicator->update(elapsed);
 }
 
 void Player::handleMovement(float const elapsed)
 {
-    // TODO query input, then apply physics forces/velocities
-    getB2Body()->ApplyForceToCenter(b2Vec2 { 0.0f, 0.0f }, true);
+    m_punctureTimer -= elapsed;
+
+    m_indicatorVec = jt::Vector2f { 0.0f, 0.0f };
+    auto const playerHalfSize = jt::Vector2f { m_animation->getLocalBounds().width / 2,
+        m_animation->getLocalBounds().height / 2 };
+    auto gp = getGame()->input().gamepad(0);
+    auto axis = gp->getAxis(jt::GamepadAxisCode::ALeft);
+    float const l = jt::MathHelper::length(axis);
+    if (l > 0.1f) {
+        jt::MathHelper::normalizeMe(axis);
+        m_indicatorVec = axis;
+
+        if (m_punctureTimer <= 0) {
+            if (gp->justPressed(jt::GamepadButtonCode::GBA)) {
+                m_punctureTimer = GP::PlayerInputPunctureDeadTime();
+                m_velocities.push_back(-1.0f * m_indicatorVec);
+            }
+        }
+    }
+
+    m_indicator->setPosition(m_animation->getPosition() + axis * 16.0f);
+
+    jt::Vector2f resultingForce { 0.0f, 0.0f };
+    for (auto const& v : m_velocities) {
+        resultingForce += v * GP::PlayerBlowoutForceFactor();
+        ;
+    }
+
+    getB2Body()->ApplyForceToCenter(b2Vec2 { resultingForce.x, resultingForce.y }, true);
+
+    // damp movement
+    auto v = m_physicsObject->getVelocity();
+    v *= GP::PlayerMovementDampeningFactor();
+    m_physicsObject->setVelocity(v);
+
+    std::cout << v.x << " " << v.y << std::endl;
 }
 
 b2Body* Player::getB2Body() { return m_physicsObject->getB2Body(); }
 
-void Player::doDraw() const { m_animation->draw(renderTarget()); }
+void Player::doDraw() const
+{
+    m_animation->draw(renderTarget());
+    m_indicator->draw(renderTarget());
+}
 
 void Player::setTouchesGround(bool touchingGround)
 {
@@ -146,17 +175,3 @@ void Player::setLevelSize(jt::Vector2f const& levelSizeInTiles)
 }
 
 void Player::resetVelocity() const { m_physicsObject->setVelocity({ 0, 0 }); }
-
-bool Player::canJump() const
-{
-    if (m_lastJumpTimer >= 0.0f) {
-        return false;
-    }
-    if (m_isTouchingGround) {
-        return true;
-    }
-    if (m_lastTouchedGroundTimer > 0) {
-        return true;
-    }
-    return false;
-}

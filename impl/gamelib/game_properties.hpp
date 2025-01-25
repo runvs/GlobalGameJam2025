@@ -1,6 +1,7 @@
 ﻿#ifndef GAME_GAMEPROPERTIES_HPP
 #define GAME_GAMEPROPERTIES_HPP
 
+#include "player.hpp"
 #include <color/color.hpp>
 #include <color/palette.hpp>
 #include <vector.hpp>
@@ -44,6 +45,9 @@ public:
     static int PhysicVelocityIterations();
     static int PhysicPositionIterations();
     static jt::Vector2f PlayerSize();
+    static float PlayerInputPunctureDeadTime();
+    static float PlayerMovementDampeningFactor();
+    static float PlayerBlowoutForceFactor();
 };
 
 #endif
