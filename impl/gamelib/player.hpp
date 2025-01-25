@@ -44,7 +44,6 @@ private:
     jt::Vector2f m_levelSizeInTiles { 0.0f, 0.0f };
 
     float m_lastTouchedGroundTimer { 0.0f };
-    b2Fixture* m_footSensorFixture { nullptr };
 
     float m_soundTimerWalk { 0.0f };
     float m_soundTimerJump { 0.0f };

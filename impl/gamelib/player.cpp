@@ -7,8 +7,6 @@
 #include <math_helper.hpp>
 #include <user_data_entries.hpp>
 
-#include <ranges>
-
 Player::Player(std::shared_ptr<jt::Box2DWorldInterface> world)
 {
     b2BodyDef bodyDef;
@@ -21,7 +19,7 @@ Player::Player(std::shared_ptr<jt::Box2DWorldInterface> world)
 void Player::doCreate()
 {
     m_animation = std::make_shared<jt::Animation>();
-    m_animation->loadFromAseprite("assets/player.aseprite", textureManager());
+    m_animation->loadFromAseprite("assets/char.aseprite", textureManager());
     m_animation->play("idle");
     m_animation->setOrigin(jt::OriginMode::CENTER);
 
@@ -36,24 +34,16 @@ void Player::doCreate()
     fixtureDef.density = 1.0f;
     fixtureDef.friction = 0.5f;
     b2CircleShape circleCollider {};
-    circleCollider.m_radius = 4.0f;
+    circleCollider.m_radius = GP::PlayerSize().x * 0.4f;
     fixtureDef.shape = &circleCollider;
     auto playerCollider = m_physicsObject->getB2Body()->CreateFixture(&fixtureDef);
     playerCollider->SetUserData((void*)(g_userDataPlayerID));
-
-    // feet
-    fixtureDef.isSensor = true;
-    b2PolygonShape polygonShape;
-    polygonShape.SetAsBox(3.0f, 0.2f, b2Vec2(0, 4), 0);
-    fixtureDef.shape = &polygonShape;
-    m_footSensorFixture = m_physicsObject->getB2Body()->CreateFixture(&fixtureDef);
 }
 
 std::shared_ptr<jt::Animation> Player::getAnimation() { return m_animation; }
 
 void Player::doUpdate(float const elapsed)
 {
-    m_physicsObject->getB2Body()->DestroyFixture(m_footSensorFixture);
     b2FixtureDef fixtureDef;
     fixtureDef.isSensor = true;
     b2PolygonShape polygonShape;
@@ -64,8 +54,6 @@ void Player::doUpdate(float const elapsed)
 
     polygonShape.SetAsBox(halfAxis.x, halfAxis.y, jt::Conversion::vec(center), 0);
     fixtureDef.shape = &polygonShape;
-    m_footSensorFixture = m_physicsObject->getB2Body()->CreateFixture(&fixtureDef);
-    m_footSensorFixture->SetUserData((void*)g_userDataPlayerFeetID);
 
     updateAnimation(elapsed);
     handleMovement(elapsed);
