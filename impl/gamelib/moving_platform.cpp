@@ -140,7 +140,7 @@ void MovingPlatform::doDraw() const
             m_spriteL->update(0.0f);
             m_spriteL->draw(renderTarget());
 
-            auto numberOfMiddlePartsX = static_cast<int>(m_platformSize.x) / 16 - 2;
+            auto numberOfMiddlePartsX = std::max(0, static_cast<int>(m_platformSize.x) / 16 - 2);
 
             for (int i = 0; i != numberOfMiddlePartsX; ++i) {
                 m_spriteM->setPosition(
@@ -161,7 +161,7 @@ void MovingPlatform::doDraw() const
             m_spriteT->update(0.0f);
             m_spriteT->draw(renderTarget());
 
-            auto numberOfMiddlePartsY = static_cast<int>(m_platformSize.y) / 16 - 2;
+            auto numberOfMiddlePartsY = std::max(0, static_cast<int>(m_platformSize.y) / 16 - 2);
 
             for (int j = 0; j != numberOfMiddlePartsY; ++j) {
                 m_spriteM->setPosition(
