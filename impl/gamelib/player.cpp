@@ -80,7 +80,6 @@ void Player::doUpdate(float const elapsed)
         m_bubble->play("b" + std::to_string(index));
     } else {
         if (m_bubble->getCurrentAnimationName() != "pop") {
-
             m_bubble->play("pop");
         }
     }
