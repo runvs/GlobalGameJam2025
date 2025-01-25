@@ -45,11 +45,11 @@ void MovingPlatform::doCreate()
 
     std::cout << m_type << std::endl;
 
-    if (m_type == "horizontal") {
+    if (m_type == "horizontal" || m_type == "") {
         m_spriteL = std::make_shared<jt::Sprite>("assets/platform_l.png", textureManager());
         m_spriteM = std::make_shared<jt::Sprite>("assets/platform_m.png", textureManager());
         m_spriteR = std::make_shared<jt::Sprite>("assets/platform_r.png", textureManager());
-    } else {
+    } else if (m_type == "vertical") {
         m_spriteT = std::make_shared<jt::Sprite>(
             "assets/V3_complete_Tileset_8x8.png", jt::Recti { 80, 208, 8, 8 }, textureManager());
         m_spriteM = std::make_shared<jt::Sprite>(
@@ -131,7 +131,7 @@ void MovingPlatform::doUpdate(float const elapsed)
 
 void MovingPlatform::doDraw() const
 {
-    if (m_type == "horizontal") {
+    if (m_type == "horizontal" || m_type == "") {
         auto numberOfMiddlePartsY = static_cast<int>(m_platformSize.y) / 8;
         for (int j = 0; j != numberOfMiddlePartsY; ++j) {
             m_spriteL->setPosition(
