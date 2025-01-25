@@ -45,4 +45,4 @@ float GP::PlayerBlowoutForceFactor() { return 5000.0f; }
 
 int GP::GamepadIndex() { return 0; }
 
-float GP::BubbleVolumeLossFactor() { return 0.05f; }
+float GP::BubbleVolumeLossFactor() { return 0.0125f; }

@@ -32,6 +32,8 @@ public:
 
     bool isInBubble() const;
 
+    void resetBubbleVolume();
+
 private:
     std::shared_ptr<jt::Animation> m_animation;
     std::shared_ptr<jt::Animation> m_bubble;

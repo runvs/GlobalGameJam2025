@@ -94,9 +94,9 @@ void Player::clampPositionToLevelSize(jt::Vector2f& currentPosition) const
     }
 }
 
-void Player::updateAnimation(float elapsed)
+void Player::updateAnimation(float const elapsed)
 {
-    // TODO add poke animation
+    // TODO add poke animations
 
     if (isInBubble()) {
         int const index = std::clamp(static_cast<int>(m_bubbleVolume * 7), 0, 6);
@@ -208,3 +208,5 @@ void Player::setLevelSize(jt::Vector2f const& levelSizeInTiles)
 void Player::resetVelocity() const { m_physicsObject->setVelocity({ 0, 0 }); }
 
 bool Player::isInBubble() const { return m_bubbleVolume >= 0.0f; }
+
+void Player::resetBubbleVolume() { m_bubbleVolume = 1.0f; }
