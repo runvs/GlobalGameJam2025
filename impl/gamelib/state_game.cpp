@@ -103,11 +103,17 @@ void StateGame::onUpdate(float const elapsed)
                     std::make_shared<StateGame>(this->m_levelName));
             }
         });
-        m_level->checkIfPlayerIsInPowerup(m_player->getPosition(), [this](ePowerUpType t) {
-            if (t == ePowerUpType::SOAP) {
-                m_player->resetBubbleVolume();
-            }
-        });
+        m_level->checkIfPlayerIsInPowerup(
+            m_player->getPosition(), [this](ePowerUpType t, PowerUp* pu) {
+                if (t == ePowerUpType::SOAP) {
+                    m_player->resetBubbleVolume();
+                }
+                add(jt::TweenScale::create(
+                    pu->getDrawable(), 0.5f, jt::Vector2f { 1.0f, 1.0f }, { 2.0f, 2.0f }));
+                auto twa = jt::TweenAlpha::create(pu->getDrawable(), 0.5f, 255u, 0u);
+                twa->addCompleteCallback([pu]() { pu->kill(); });
+                add(twa);
+            });
 
         handleCameraScrolling(elapsed);
     }

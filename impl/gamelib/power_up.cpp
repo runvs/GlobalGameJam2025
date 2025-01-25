@@ -20,9 +20,6 @@ void PowerUp::doUpdate(float const elapsed) { m_animation->update(elapsed); }
 
 void PowerUp::doDraw() const
 {
-    if (m_pickedUp) {
-        return;
-    }
     if (!isAlive()) {
         return;
     }
@@ -30,10 +27,9 @@ void PowerUp::doDraw() const
 }
 
 void PowerUp::checkIfPlayerIsInPowerUp(
-    jt::Vector2f const& playerPosition, std::function<void(ePowerUpType)> callback)
+    jt::Vector2f const& playerPosition, std::function<void(ePowerUpType, PowerUp*)> callback)
 {
     if (m_pickedUp) {
-
         return;
     }
 
@@ -55,9 +51,11 @@ void PowerUp::checkIfPlayerIsInPowerUp(
          }) {
         if (jt::MathHelper::checkIsIn(exitRect, positionToCheck)) {
             m_pickedUp = true;
-            callback(m_type);
+            callback(m_type, this);
         }
     }
 }
 
 ePowerUpType PowerUp::getPowerUpType() const { return m_type; }
+
+std::shared_ptr<jt::DrawableInterface> PowerUp::getDrawable() { return m_animation; }

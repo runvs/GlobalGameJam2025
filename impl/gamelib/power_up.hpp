@@ -16,9 +16,10 @@ public:
     explicit PowerUp(jt::tilemap::InfoRect const& rect);
 
     void checkIfPlayerIsInPowerUp(
-        jt::Vector2f const& playerPosition, std::function<void(ePowerUpType)> callback);
+        jt::Vector2f const& playerPosition, std::function<void(ePowerUpType, PowerUp*)> callback);
 
     [[nodiscard]] ePowerUpType getPowerUpType() const;
+    std::shared_ptr<jt::DrawableInterface> getDrawable();
 
     bool m_pickedUp { false };
 
@@ -28,7 +29,7 @@ private:
     std::shared_ptr<jt::Animation> m_animation { nullptr };
 
     void doCreate() override;
-    void doUpdate(float const elapsed) override;
+    void doUpdate(float elapsed) override;
     void doDraw() const override;
 };
 

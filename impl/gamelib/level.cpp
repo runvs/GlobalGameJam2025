@@ -228,8 +228,8 @@ void Level::checkIfPlayerIsInExit(
     }
 }
 
-void Level::checkIfPlayerIsInPowerup(jt::Vector2f const& playerPosition,
-    std::function<void(ePowerUpType powerupType)> const& callback)
+void Level::checkIfPlayerIsInPowerup(
+    jt::Vector2f const& playerPosition, std::function<void(ePowerUpType, PowerUp*)> const& callback)
 {
     for (auto p : m_powerUps) {
         if (!p->isAlive()) {

@@ -25,7 +25,7 @@ public:
         jt::Vector2f const& playerPosition, std::function<void(std::string const&)> callback);
 
     void checkIfPlayerIsInPowerup(jt::Vector2f const& playerPosition,
-        std::function<void(ePowerUpType powerupType)> const& callback);
+        std::function<void(ePowerUpType, PowerUp*)> const& callback);
 
     jt::Vector2f getLevelSizeInPixel() const;
 
