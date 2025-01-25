@@ -73,16 +73,6 @@ void Player::doUpdate(float const elapsed)
     m_wasTouchingGroundLastFrame = m_isTouchingGround;
 
     m_lastTouchedGroundTimer -= elapsed;
-
-    if (isInBubble()) {
-        int const index = std::clamp(static_cast<int>(m_bubbleVolume * 7), 0, 6);
-        m_bubble->play("b" + std::to_string(index));
-        m_bubbleVolume -= elapsed * m_velocities.size() * GP::BubbleVolumeLossFactor();
-    } else {
-        if (m_bubble->getCurrentAnimationName() != "pop") {
-            m_bubble->play("pop");
-        }
-    }
 }
 
 void Player::clampPositionToLevelSize(jt::Vector2f& currentPosition) const
@@ -106,18 +96,18 @@ void Player::clampPositionToLevelSize(jt::Vector2f& currentPosition) const
 
 void Player::updateAnimation(float elapsed)
 {
-    // TODO update animation
-    auto const rotated_velocity = m_physicsObject->getVelocity();
+    // TODO add poke animation
 
-    // if (rotated_velocity.x > 0) {
-    //     m_animation->play("left");
-    //     m_isMoving = true;
-    // } else if (rotated_velocity.x < 0) {
-    //     m_animation->play("right");
-    //     m_isMoving = true;
-    // } else {
-    //     m_isMoving = false;
-    // }
+    if (isInBubble()) {
+        int const index = std::clamp(static_cast<int>(m_bubbleVolume * 7), 0, 6);
+        m_bubble->play("b" + std::to_string(index));
+        m_bubbleVolume -= elapsed * m_velocities.size() * GP::BubbleVolumeLossFactor();
+    } else {
+        if (m_bubble->getCurrentAnimationName() != "pop") {
+            m_bubble->play("pop");
+            m_velocities.clear();
+        }
+    }
 
     m_animation->update(elapsed);
     m_bubble->update(elapsed);
@@ -128,48 +118,52 @@ void Player::handleMovement(float const elapsed)
 {
     m_punctureTimer -= elapsed;
 
-    m_indicatorVec = jt::Vector2f { 0.0f, 0.0f };
-    auto const playerHalfSize = jt::Vector2f { m_animation->getLocalBounds().width / 2,
-        m_animation->getLocalBounds().height / 2 };
-    auto gp = getGame()->input().gamepad(GP::GamepadIndex());
-    auto axis = gp->getAxis(jt::GamepadAxisCode::ALeft);
-    float const l = jt::MathHelper::length(axis);
-    if (l > 0.1f) {
-        jt::MathHelper::normalizeMe(axis);
-        m_indicatorVec = axis;
+    if (isInBubble()) {
+        m_indicatorVec = jt::Vector2f { 0.0f, 0.0f };
+        auto const playerHalfSize = jt::Vector2f { m_animation->getLocalBounds().width / 2,
+            m_animation->getLocalBounds().height / 2 };
+        auto gp = getGame()->input().gamepad(GP::GamepadIndex());
+        auto axis = gp->getAxis(jt::GamepadAxisCode::ALeft);
+        float const l = jt::MathHelper::length(axis);
+        if (l > 0.1f) {
+            jt::MathHelper::normalizeMe(axis);
+            m_indicatorVec = axis;
 
-        if (m_punctureTimer <= 0) {
-            if (gp->justPressed(jt::GamepadButtonCode::GBA)) {
-                m_punctureTimer = GP::PlayerInputPunctureDeadTime();
-                m_velocities.push_back(-1.0f * m_indicatorVec);
-            }
-            if (gp->justPressed(jt::GamepadButtonCode::GBB)) {
-                m_punctureTimer = GP::PlayerInputPunctureDeadTime();
-                auto controllerVec = -1.0f * m_indicatorVec;
+            if (m_punctureTimer <= 0) {
+                if (gp->justPressed(jt::GamepadButtonCode::GBA)) {
+                    m_punctureTimer = GP::PlayerInputPunctureDeadTime();
+                    m_velocities.push_back(-1.0f * m_indicatorVec);
+                }
+                if (gp->justPressed(jt::GamepadButtonCode::GBB)) {
+                    m_punctureTimer = GP::PlayerInputPunctureDeadTime();
+                    auto controllerVec = -1.0f * m_indicatorVec;
 
-                std::erase_if(m_velocities, [controllerVec](auto const& v) {
-                    auto dist = jt::MathHelper::length(controllerVec - v);
-                    // std::cout << dist << std::endl;
-                    return dist < 0.25f;
-                });
+                    std::erase_if(m_velocities, [controllerVec](auto const& v) {
+                        auto dist = jt::MathHelper::length(controllerVec - v);
+                        // std::cout << dist << std::endl;
+                        return dist < 0.25f;
+                    });
+                }
             }
         }
+
+        m_indicator->setPosition(m_animation->getPosition() + axis * 16.0f);
+
+        jt::Vector2f resultingForce { 0.0f, 0.0f };
+        for (auto const& v : m_velocities) {
+            resultingForce += v * GP::PlayerBlowoutForceFactor();
+        }
+
+        getB2Body()->ApplyForceToCenter(b2Vec2 { resultingForce.x, resultingForce.y }, true);
+
+        // damp bubble movement
+        auto v = m_physicsObject->getVelocity();
+        v *= GP::PlayerMovementDampeningFactor();
+        m_physicsObject->setVelocity(v);
+    } else {
+        // TODO movement for outside bubble
+        getB2Body()->ApplyForceToCenter(b2Vec2 { 0.0f, 10000.0f }, true);
     }
-
-    m_indicator->setPosition(m_animation->getPosition() + axis * 16.0f);
-
-    jt::Vector2f resultingForce { 0.0f, 0.0f };
-    for (auto const& v : m_velocities) {
-        resultingForce += v * GP::PlayerBlowoutForceFactor();
-        ;
-    }
-
-    getB2Body()->ApplyForceToCenter(b2Vec2 { resultingForce.x, resultingForce.y }, true);
-
-    // damp movement
-    auto v = m_physicsObject->getVelocity();
-    v *= GP::PlayerMovementDampeningFactor();
-    m_physicsObject->setVelocity(v);
 }
 
 b2Body* Player::getB2Body() { return m_physicsObject->getB2Body(); }
@@ -179,13 +173,15 @@ void Player::doDraw() const
     m_animation->draw(renderTarget());
     m_bubble->draw(renderTarget());
 
-    for (auto const& v : m_velocities) {
-        m_punctureIndicator->setPosition(m_animation->getPosition() - v * 16.0f);
-        m_punctureIndicator->update(0.0f);
-        m_punctureIndicator->draw(renderTarget());
-    }
-    if (jt::MathHelper::length(m_indicatorVec) > 0.2f) {
-        m_indicator->draw(renderTarget());
+    if (isInBubble()) {
+        for (auto const& v : m_velocities) {
+            m_punctureIndicator->setPosition(m_animation->getPosition() - v * 16.0f);
+            m_punctureIndicator->update(0.0f);
+            m_punctureIndicator->draw(renderTarget());
+        }
+        if (jt::MathHelper::length(m_indicatorVec) > 0.2f) {
+            m_indicator->draw(renderTarget());
+        }
     }
 }
 
