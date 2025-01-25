@@ -20,7 +20,11 @@ public:
     void setPosition(jt::Vector2f const& pos);
 
 private:
-    mutable std::shared_ptr<jt::DrawableInterface> m_drawable { nullptr };
+    mutable std::shared_ptr<jt::DrawableInterface> m_drawableL { nullptr };
+    mutable std::shared_ptr<jt::DrawableInterface> m_drawableM { nullptr };
+    mutable std::shared_ptr<jt::DrawableInterface> m_drawableR { nullptr };
+    mutable std::shared_ptr<jt::DrawableInterface> m_drawableT { nullptr };
+    mutable std::shared_ptr<jt::DrawableInterface> m_drawableB { nullptr };
     jt::Rectf m_rect {};
 
     std::string m_name { "" };

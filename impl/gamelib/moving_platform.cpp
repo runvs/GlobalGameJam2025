@@ -43,8 +43,6 @@ void MovingPlatform::doCreate()
     m_physicsObject->setPosition(p1);
     //    m_physicsObject->setVelocity(m_currentVelocity);
 
-    std::cout << m_type << std::endl;
-
     if (m_type == "horizontal" || m_type == "") {
         m_spriteL = std::make_shared<jt::Sprite>(
             "assets/tileset.png", jt::Recti { 0, 32, 16, 16 }, textureManager());

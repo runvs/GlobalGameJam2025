@@ -302,6 +302,38 @@
                  "width":8,
                  "x":352,
                  "y":48
+                }, 
+                {
+                 "height":8,
+                 "id":430,
+                 "name":"map_settings",
+                 "properties":[
+                        {
+                         "name":"bg_b",
+                         "type":"int",
+                         "value":150
+                        }, 
+                        {
+                         "name":"bg_g",
+                         "type":"int",
+                         "value":150
+                        }, 
+                        {
+                         "name":"bg_r",
+                         "type":"int",
+                         "value":150
+                        }, 
+                        {
+                         "name":"era",
+                         "type":"string",
+                         "value":"cp"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":8,
+                 "x":200,
+                 "y":32
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -310,7 +342,7 @@
          "y":0
         }],
  "nextlayerid":10,
- "nextobjectid":430,
+ "nextobjectid":431,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.1",
