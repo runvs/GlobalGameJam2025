@@ -13,7 +13,8 @@ class Player : public jt::GameObject {
 public:
     using Sptr = std::shared_ptr<Player>;
     Player(std::shared_ptr<jt::Box2DWorldInterface> world,
-        std::weak_ptr<jt::ParticleSystem<jt::Animation, 100>> exhaustParticleSFstem);
+        std::weak_ptr<jt::ParticleSystem<jt::Animation, 100>> exhaustParticleSFstem,
+        std::string const& currentLevelName);
 
     ~Player() override = default;
 
@@ -50,9 +51,11 @@ private:
     float m_bubbleVolume { 1.0 };
 
     bool m_isMoving { false };
-    jt::Vector2f m_levelSizeInTiles { 0.0f, 0.0f };
+    jt::Vector2f m_previousPosition { 9000.1f, 9000.1f };
+    float m_timeWithoutBubbleOrMovement = 0.0f;
 
-    float m_lastTouchedGroundTimer { 0.0f };
+    jt::Vector2f m_levelSizeInTiles { 0.0f, 0.0f };
+    std::string const& m_currentLevelName;
 
     float m_soundTimerWalk { 0.0f };
     float m_soundTimerJump { 0.0f };
@@ -70,6 +73,7 @@ private:
 
     void handleCheats(float const elapsed);
     void handleMovement(float const elapsed);
+    void handleOutsideBubbleWithoutMovement(float const);
     void updateAnimation(float elapsed);
     void clampPositionToLevelSize(jt::Vector2f& currentPosition) const;
     bool m_horizontalMovement { false };

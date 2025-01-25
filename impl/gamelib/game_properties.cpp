@@ -43,6 +43,8 @@ float GP::PlayerMovementDampeningFactor() { return 0.99f; }
 
 float GP::PlayerBlowoutForceFactor() { return 5000.0f; }
 
+float GP::PlayerWithoutBubbleOrMovementDeathTimer() { return 4.0f; }
+
 int GP::GamepadIndex() { return 0; }
 
 float GP::BubbleVolumeLossFactor() { return 0.0125f; }
