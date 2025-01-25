@@ -78,8 +78,10 @@ void StateGame::onUpdate(float const elapsed)
     }
     if (getGame()->input().keyboard()->justPressed(jt::KeyCode::F1)
         || getGame()->input().keyboard()->justPressed(jt::KeyCode::Escape)
-        || getGame()->input().gamepad(0)->justPressed(jt::GamepadButtonCode::GBBack)
-        || getGame()->input().gamepad(1)->justPressed(jt::GamepadButtonCode::GBBack)) {
+        || getGame()
+            ->input()
+            .gamepad(GP::GamepadIndex())
+            ->justPressed(jt::GamepadButtonCode::GBBack)) {
         getGame()->stateManager().switchState(std::make_shared<StateMenu>());
     }
 }

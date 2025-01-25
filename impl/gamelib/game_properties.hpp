@@ -48,6 +48,7 @@ public:
     static float PlayerInputPunctureDeadTime();
     static float PlayerMovementDampeningFactor();
     static float PlayerBlowoutForceFactor();
+    static int GamepadIndex();
 };
 
 #endif

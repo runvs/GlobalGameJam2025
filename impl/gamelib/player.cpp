@@ -113,7 +113,7 @@ void Player::handleMovement(float const elapsed)
     m_indicatorVec = jt::Vector2f { 0.0f, 0.0f };
     auto const playerHalfSize = jt::Vector2f { m_animation->getLocalBounds().width / 2,
         m_animation->getLocalBounds().height / 2 };
-    auto gp = getGame()->input().gamepad(0);
+    auto gp = getGame()->input().gamepad(GP::GamepadIndex());
     auto axis = gp->getAxis(jt::GamepadAxisCode::ALeft);
     float const l = jt::MathHelper::length(axis);
     if (l > 0.1f) {
