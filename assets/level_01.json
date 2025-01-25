@@ -128,17 +128,17 @@
                         {
                          "name":"bg_b",
                          "type":"int",
-                         "value":150
+                         "value":255
                         }, 
                         {
                          "name":"bg_g",
                          "type":"int",
-                         "value":150
+                         "value":255
                         }, 
                         {
                          "name":"bg_r",
                          "type":"int",
-                         "value":150
+                         "value":255
                         }, 
                         {
                          "name":"era",

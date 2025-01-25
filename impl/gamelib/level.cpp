@@ -16,9 +16,17 @@ Level::Level(std::string const& fileName, std::weak_ptr<jt::Box2DWorldInterface>
 
 void Level::doCreate()
 {
-    m_background = std::make_shared<jt::Shape>();
-    m_background->makeRect(GP::GetScreenSize(), textureManager());
+    m_flatColorBackground = std::make_shared<jt::Shape>();
+    m_flatColorBackground->makeRect(GP::GetScreenSize(), textureManager());
 
+    m_flatColorBackground->setCamMovementFactor(0.0f);
+
+    m_background = std::make_shared<jt::Animation>();
+    m_background->loadFromAseprite("assets/background.aseprite", textureManager());
+    m_background->play("idle");
+    auto c = m_background->getColor();
+    c.a = 50;
+    m_background->setColor(c);
     m_background->setCamMovementFactor(0.0f);
 
     jt::tilemap::TilesonLoader loader { getGame()->cache().getTilemapCache(), m_fileName };
@@ -158,7 +166,7 @@ void Level::loadLevelSettings(jt::tilemap::TilesonLoader& loader)
     for (auto const& info : settings) {
 
         if (info.name == "map_settings") {
-            m_background->setColor(
+            m_flatColorBackground->setColor(
                 jt::Color { static_cast<uint8_t>(info.properties.ints.at("bg_r")),
                     static_cast<uint8_t>(info.properties.ints.at("bg_g")),
                     static_cast<uint8_t>(info.properties.ints.at("bg_b")) });
@@ -178,8 +186,9 @@ void Level::loadLevelSettings(jt::tilemap::TilesonLoader& loader)
 
 void Level::doUpdate(float const elapsed)
 {
+    m_flatColorBackground->update(elapsed);
     m_background->update(elapsed);
-    m_tileLayerGround->update(elapsed);
+
     for (auto& exit : m_exits) {
         exit.update(elapsed);
     }
@@ -196,7 +205,9 @@ void Level::doUpdate(float const elapsed)
 
 void Level::doDraw() const
 {
+    m_flatColorBackground->draw(renderTarget());
     m_background->draw(renderTarget());
+
     m_tileLayerGround->draw(renderTarget());
     for (auto const& exit : m_exits) {
         exit.draw();

@@ -36,7 +36,9 @@ private:
     void doUpdate(float const elapsed) override;
     void doDraw() const override;
 
-    std::shared_ptr<jt::Shape> m_background { nullptr };
+    std::shared_ptr<jt::Shape> m_flatColorBackground { nullptr };
+    std::shared_ptr<jt::Animation> m_background { nullptr };
+
     std::string m_fileName { "" };
     std::weak_ptr<jt::Box2DWorldInterface> m_world {};
 
