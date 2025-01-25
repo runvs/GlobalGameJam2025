@@ -34,6 +34,7 @@ private:
     std::shared_ptr<jt::Animation> m_animation;
 
     std::shared_ptr<jt::Shape> m_indicator;
+    std::shared_ptr<jt::Shape> m_punctureIndicator;
     std::shared_ptr<jt::Box2DObject> m_physicsObject;
 
     bool m_isTouchingGround { false };

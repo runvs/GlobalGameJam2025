@@ -27,6 +27,10 @@ void Player::doCreate()
     m_indicator = jt::dh::createShapeRect({ 2.0f, 2.0f }, jt::colors::Black, textureManager());
     m_indicator->setOrigin(jt::OriginMode::CENTER);
 
+    m_punctureIndicator
+        = jt::dh::createShapeRect({ 1.0f, 1.0f }, jt::colors::Red, textureManager());
+    m_punctureIndicator->setOrigin(jt::OriginMode::CENTER);
+
     b2FixtureDef fixtureDef;
     fixtureDef.density = 1.0f;
     fixtureDef.friction = 0.5f;
@@ -151,6 +155,13 @@ b2Body* Player::getB2Body() { return m_physicsObject->getB2Body(); }
 void Player::doDraw() const
 {
     m_animation->draw(renderTarget());
+
+    for (auto const& v : m_velocities) {
+        m_punctureIndicator->setPosition(m_animation->getPosition() - v * 16.0f);
+        m_punctureIndicator->update(0.0f);
+        m_punctureIndicator->draw(renderTarget());
+    }
+
     m_indicator->draw(renderTarget());
 }
 
