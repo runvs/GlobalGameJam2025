@@ -72,6 +72,11 @@ void StateGame::onUpdate(float const elapsed)
         m_level->checkIfPlayerIsInKillbox(m_player->getPosition(), [this]() {
             auto const dieSound = getGame()->audio().addTemporarySound("event:/death-by-spikes-p1");
             dieSound->play();
+            if (!m_ending) {
+                m_ending = true;
+                getGame()->stateManager().switchState(
+                    std::make_shared<StateGame>(this->m_levelName));
+            }
         });
 
         handleCameraScrolling(elapsed);

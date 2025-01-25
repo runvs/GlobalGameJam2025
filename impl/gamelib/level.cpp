@@ -61,7 +61,8 @@ void Level::loadMovingPlatforms(jt::tilemap::TilesonLoader& loader)
                 timeoffset = p.properties.floats.at("timeoffset");
             }
             auto platform = std::make_shared<MovingPlatform>(m_world.lock(), p.size,
-                currentPlatformPositions, p.properties.floats.at("velocity"), timeoffset);
+                currentPlatformPositions, p.properties.floats.at("velocity"), timeoffset,
+                p.properties.strings.at("type"));
             std::string linkedKillbox { "" };
             if (p.properties.strings.count("linked_killbox") == 1) {
                 linkedKillbox = p.properties.strings.at("linked_killbox");
