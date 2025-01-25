@@ -86,46 +86,12 @@ void StateGame::endGame()
 void StateGame::handleCameraScrolling(float const elapsed)
 {
     // TODO add looking forward
-    auto const ps = m_player->getPosOnScreen();
-
-    float const topMargin = 100.0f;
-    float const botMargin = 100.0f;
-    float const rightMargin = 120.0f;
-    float const leftMargin = 120.0f;
-
     auto& cam = getGame()->gfx().camera();
-
-    auto const cp = cam.getCamOffset();
-
-    auto const dif = cp - ps;
-    auto const dist = jt::MathHelper::length(dif);
-    float const scrollSpeed = 200.0f;
 
     auto const screenWidth = GP::GetScreenSize().x;
     auto const screenHeight = GP::GetScreenSize().y;
-    if (ps.x < leftMargin) {
-        cam.move(jt::Vector2f { -scrollSpeed * elapsed, 0.0f });
-        if (ps.x < rightMargin / 2) {
-            cam.move(jt::Vector2f { -scrollSpeed * elapsed, 0.0f });
-        }
-    } else if (ps.x > screenWidth - rightMargin) {
-        cam.move(jt::Vector2f { scrollSpeed * elapsed, 0.0f });
-        if (ps.x > screenWidth - rightMargin / 3 * 2) {
-            cam.move(jt::Vector2f { scrollSpeed * elapsed, 0.0f });
-        }
-    }
 
-    if (ps.y < topMargin) {
-        cam.move(jt::Vector2f { 0.0f, -scrollSpeed * elapsed });
-        if (ps.y < rightMargin / 2) {
-            cam.move(jt::Vector2f { 0.0f, -scrollSpeed * elapsed });
-        }
-    } else if (ps.y > screenHeight - botMargin) {
-        cam.move(jt::Vector2f { 0.0f, scrollSpeed * elapsed });
-        if (ps.y > screenWidth - rightMargin / 3 * 2) {
-            cam.move(jt::Vector2f { 0.0f, scrollSpeed * elapsed });
-        }
-    }
+    cam.setCamOffset(m_player->getPosition() - jt::Vector2f { screenWidth / 2, screenHeight / 2 });
 
     // clamp camera to level bounds
     auto offset = cam.getCamOffset();
@@ -135,6 +101,7 @@ void StateGame::handleCameraScrolling(float const elapsed)
     if (offset.y < 0) {
         offset.y = 0;
     }
+
     auto const levelWidth = m_level->getLevelSizeInPixel().x;
     auto const levelHeight = m_level->getLevelSizeInPixel().y;
     auto const maxCamPositionX = levelWidth - screenWidth;

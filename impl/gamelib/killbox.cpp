@@ -34,9 +34,10 @@ void Killbox::doDraw() const
 {
     if (m_drawable) {
         if (m_type == "spike_down" || m_type == "spike_up") {
-            auto numberOfParts = static_cast<int>(m_rect.width) / 8;
+            auto numberOfParts = static_cast<int>(m_rect.width) / 16;
             for (int i = 0; i != numberOfParts; ++i) {
-                m_drawable->setPosition(jt::Vector2f { m_rect.left + i * 8.0f, m_rect.top + 0.0f });
+                m_drawable->setPosition(
+                    jt::Vector2f { m_rect.left + i * 16.0f, m_rect.top + 0.0f });
                 m_drawable->update(0.0f);
                 m_drawable->draw(renderTarget());
             }
