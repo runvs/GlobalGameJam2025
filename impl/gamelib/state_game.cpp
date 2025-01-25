@@ -60,6 +60,15 @@ void StateGame::onUpdate(float const elapsed)
             endGame();
         }
 
+        m_level->checkIfPlayerIsInExit(
+            m_player->getPosition(), [this](std::string const& newLevelName) {
+                if (!m_ending) {
+                    m_ending = true;
+                    getGame()->stateManager().switchState(
+                        std::make_shared<StateGame>(newLevelName));
+                }
+            });
+
         m_level->checkIfPlayerIsInKillbox(m_player->getPosition(), [this]() {
             auto const dieSound = getGame()->audio().addTemporarySound("event:/death-by-spikes-p1");
             dieSound->play();
