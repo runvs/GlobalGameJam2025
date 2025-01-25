@@ -1,6 +1,7 @@
 #ifndef JAMTEMPLATE_LEVEL_HPP
 #define JAMTEMPLATE_LEVEL_HPP
 
+#include "power_up.hpp"
 #include <box2dwrapper/box2d_object.hpp>
 #include <box2dwrapper/box2d_world_interface.hpp>
 #include <exit.hpp>
@@ -23,6 +24,9 @@ public:
     void checkIfPlayerIsInExit(
         jt::Vector2f const& playerPosition, std::function<void(std::string const&)> callback);
 
+    void checkIfPlayerIsInPowerup(jt::Vector2f const& playerPosition,
+        std::function<void(ePowerUpType powerupType)> const& callback);
+
     jt::Vector2f getLevelSizeInPixel() const;
 
 private:
@@ -40,6 +44,7 @@ private:
 
     std::vector<std::shared_ptr<Killbox>> m_killboxes {};
     std::vector<Exit> m_exits {};
+    std::vector<std::shared_ptr<PowerUp>> m_powerUps {};
     jt::Vector2f m_levelSizeInPixel { 0.0f, 0.0f };
 
     std::vector<std::shared_ptr<MovingPlatform>> m_movingPlatforms {};
@@ -48,6 +53,7 @@ private:
     void loadLevelTileLayer(jt::tilemap::TilesonLoader& loader);
     void loadLevelCollisions(jt::tilemap::TilesonLoader& loader);
     void loadLevelKillboxes(jt::tilemap::TilesonLoader& loader);
+    void loadLevelPowerups(jt::tilemap::TilesonLoader& loader);
     void loadLevelSize(jt::tilemap::TilesonLoader const& loader);
     void loadMovingPlatforms(jt::tilemap::TilesonLoader& loader);
 };

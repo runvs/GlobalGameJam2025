@@ -103,15 +103,20 @@ void StateGame::onUpdate(float const elapsed)
                     std::make_shared<StateGame>(this->m_levelName));
             }
         });
+        m_level->checkIfPlayerIsInPowerup(m_player->getPosition(), [this](ePowerUpType t) {
+            if (t == ePowerUpType::SOAP) {
+                m_player->resetBubbleVolume();
+            }
+        });
 
         handleCameraScrolling(elapsed);
     }
     if (getGame()->input().keyboard()->justPressed(jt::KeyCode::F1)
         || getGame()->input().keyboard()->justPressed(jt::KeyCode::Escape)
         || getGame()
-               ->input()
-               .gamepad(GP::GamepadIndex())
-               ->justPressed(jt::GamepadButtonCode::GBBack)) {
+            ->input()
+            .gamepad(GP::GamepadIndex())
+            ->justPressed(jt::GamepadButtonCode::GBBack)) {
         getGame()->stateManager().switchState(std::make_shared<StateMenu>());
     }
 }

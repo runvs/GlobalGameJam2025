@@ -1,25 +1,41 @@
-#include "exit.hpp"
-
+#include "power_up.hpp"
+#include "game_interface.hpp"
 #include "game_properties.hpp"
-#include "math_helper.hpp"
-#include <game_interface.hpp>
 
-Exit::Exit(jt::tilemap::InfoRect const& rect) { m_info = rect; }
+PowerUp::PowerUp(jt::tilemap::InfoRect const& rect) { m_info = rect; }
 
-void Exit::doCreate()
+void PowerUp::doCreate()
 {
-    m_sprite = std::make_shared<jt::Sprite>("assets/exit.png", textureManager());
+    // TODO new sprite
+    auto const type = m_info.properties.strings.at("type");
+    m_animation = std::make_shared<jt::Animation>();
+    m_animation->loadFromAseprite("assets/soap.aseprite", textureManager());
+    m_animation->play("idle");
+    m_animation->setOffset(jt::OffsetMode::CENTER);
 
-    m_sprite->setPosition(m_info.position);
+    m_animation->setPosition(m_info.position);
 }
 
-void Exit::doUpdate(float const elapsed) { m_sprite->update(elapsed); }
+void PowerUp::doUpdate(float const elapsed) { m_animation->update(elapsed); }
 
-void Exit::doDraw() const { m_sprite->draw(renderTarget()); }
-
-void Exit::checkIfPlayerIsInExit(
-    jt::Vector2f const& playerPosition, std::function<void(std::string const&)> callback)
+void PowerUp::doDraw() const
 {
+    if (m_pickedUp) {
+        return;
+    }
+    if (!isAlive()) {
+        return;
+    }
+    m_animation->draw(renderTarget());
+}
+
+void PowerUp::checkIfPlayerIsInPowerUp(
+    jt::Vector2f const& playerPosition, std::function<void(ePowerUpType)> callback)
+{
+    if (m_pickedUp) {
+
+        return;
+    }
 
     jt::Rectf const exitRect { m_info.position.x, m_info.position.y, m_info.size.x, m_info.size.y };
 
@@ -37,11 +53,11 @@ void Exit::checkIfPlayerIsInExit(
     playerPosition + jt::Vector2f{-GP::PlayerSize().x *0.5f, -GP::PlayerSize().y *0.5f}
              // clang-format on
          }) {
-
         if (jt::MathHelper::checkIsIn(exitRect, positionToCheck)) {
-            auto const nextLevelName = m_info.properties.strings["next_level"];
-            getGame()->logger().info("switch to next level: " + nextLevelName, { "platformer" });
-            callback(nextLevelName);
+            m_pickedUp = true;
+            callback(m_type);
         }
     }
 }
+
+ePowerUpType PowerUp::getPowerUpType() const { return m_type; }

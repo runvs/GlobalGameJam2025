@@ -1,6 +1,7 @@
 #include "level.hpp"
 
 #include "game_properties.hpp"
+#include "power_up.hpp"
 #include <game_interface.hpp>
 #include <math_helper.hpp>
 #include <strutils.hpp>
@@ -27,6 +28,7 @@ void Level::doCreate()
     loadLevelTileLayer(loader);
     loadLevelCollisions(loader);
     loadLevelKillboxes(loader);
+    loadLevelPowerups(loader);
     loadMovingPlatforms(loader);
 }
 
@@ -110,6 +112,17 @@ void Level::loadLevelKillboxes(jt::tilemap::TilesonLoader& loader)
     }
 }
 
+void Level::loadLevelPowerups(jt::tilemap::TilesonLoader& loader)
+{
+    auto const powerUpInfos = loader.loadObjectsFromLayer("powerups");
+    for (auto const& i : powerUpInfos) {
+        auto pu = std::make_shared<PowerUp>(i);
+        pu->setGameInstance(getGame());
+        pu->create();
+        m_powerUps.push_back(pu);
+    }
+}
+
 void Level::loadLevelCollisions(jt::tilemap::TilesonLoader& loader)
 {
     auto tileCollisions = loader.loadCollisionsFromLayer("ground");
@@ -173,6 +186,9 @@ void Level::doUpdate(float const elapsed)
     for (auto& kb : m_killboxes) {
         kb->update(elapsed);
     }
+    for (auto& pu : m_powerUps) {
+        pu->update(elapsed);
+    }
 }
 
 void Level::doDraw() const
@@ -187,6 +203,9 @@ void Level::doDraw() const
     }
     for (auto const& kb : m_killboxes) {
         kb->draw();
+    }
+    for (auto& pu : m_powerUps) {
+        pu->draw();
     }
 }
 
@@ -206,6 +225,17 @@ void Level::checkIfPlayerIsInExit(
     for (auto& exit : m_exits) {
         exit.checkIfPlayerIsInExit(playerPosition, callback);
         break;
+    }
+}
+
+void Level::checkIfPlayerIsInPowerup(jt::Vector2f const& playerPosition,
+    std::function<void(ePowerUpType powerupType)> const& callback)
+{
+    for (auto p : m_powerUps) {
+        if (!p->isAlive()) {
+            return;
+        }
+        p->checkIfPlayerIsInPowerUp(playerPosition, callback);
     }
 }
 
