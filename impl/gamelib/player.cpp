@@ -23,6 +23,11 @@ void Player::doCreate()
     m_animation->play("idle");
     m_animation->setOrigin(jt::OriginMode::CENTER);
 
+    m_bubble = std::make_shared<jt::Animation>();
+    m_bubble->loadFromAseprite("assets/bubble.aseprite", textureManager());
+    m_bubble->play("b6");
+    m_bubble->setOrigin(jt::OriginMode::CENTER);
+
     m_indicator = jt::dh::createShapeRect({ 2.0f, 2.0f }, jt::colors::Black, textureManager());
     m_indicator->setOrigin(jt::OriginMode::CENTER);
 
@@ -62,6 +67,7 @@ void Player::doUpdate(float const elapsed)
     clampPositionToLevelSize(currentPosition);
     m_physicsObject->setPosition(currentPosition);
     m_animation->setPosition(currentPosition);
+    m_bubble->setPosition(currentPosition);
 
     m_wasTouchingGroundLastFrame = m_isTouchingGround;
 
@@ -96,6 +102,7 @@ void Player::updateAnimation(float elapsed)
     // }
 
     m_animation->update(elapsed);
+    m_bubble->update(elapsed);
     m_indicator->update(elapsed);
 }
 
@@ -152,6 +159,7 @@ b2Body* Player::getB2Body() { return m_physicsObject->getB2Body(); }
 void Player::doDraw() const
 {
     m_animation->draw(renderTarget());
+    m_bubble->draw(renderTarget());
 
     for (auto const& v : m_velocities) {
         m_punctureIndicator->setPosition(m_animation->getPosition() - v * 16.0f);
