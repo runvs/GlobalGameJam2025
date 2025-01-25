@@ -5,6 +5,7 @@
 #include <conversions.hpp>
 #include <game_interface.hpp>
 #include <math_helper.hpp>
+#include <random/random.hpp>
 #include <user_data_entries.hpp>
 
 Player::Player(std::shared_ptr<jt::Box2DWorldInterface> world,
@@ -137,6 +138,13 @@ void Player::updateAnimation(float const elapsed)
         if (m_bubble->getCurrentAnimationName() != "pop") {
             m_bubble->play("pop");
             m_velocities.clear();
+
+            for (int i = 0; i < 16; ++i) {
+                auto position
+                    = m_animation->getPosition() + jt::Random::getRandomPointOnCircle(12.0);
+
+                m_exhaustParticleSystem.lock()->fire(1, position);
+            }
         }
     }
 
