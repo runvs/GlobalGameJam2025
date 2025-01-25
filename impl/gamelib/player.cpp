@@ -88,13 +88,20 @@ void Player::doUpdate(float const elapsed)
 void Player::clampPositionToLevelSize(jt::Vector2f& currentPosition) const
 {
     auto const playerWidth = m_animation->getLocalBounds().width;
+    auto const playerHeight = m_animation->getLocalBounds().height;
     if (currentPosition.x < playerWidth) {
         currentPosition.x = playerWidth;
     }
     if (currentPosition.x > m_levelSizeInTiles.x - playerWidth) {
         currentPosition.x = m_levelSizeInTiles.x - playerWidth;
     }
-    // TODO clamp in Y as well
+
+    if (currentPosition.y < playerHeight) {
+        currentPosition.y = playerHeight;
+    }
+    if (currentPosition.y > m_levelSizeInTiles.y - playerHeight) {
+        currentPosition.y = m_levelSizeInTiles.y - playerHeight;
+    }
 }
 
 void Player::updateAnimation(float elapsed)
