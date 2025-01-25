@@ -60,7 +60,9 @@ void Killbox::doDraw() const
             m_drawableL->update(0.0f);
             m_drawableL->draw(renderTarget());
 
-            auto numberOfMiddlePartsX = static_cast<int>(m_rect.width) / 16 - 2;
+            auto numberOfMiddlePartsX = std::max(0, static_cast<int>(m_rect.width) / 16 - 2);
+            if (numberOfMiddlePartsX == 0)
+                break;
 
             for (int i = 0; i != numberOfMiddlePartsX; ++i) {
                 m_drawableM->setPosition(
@@ -80,7 +82,9 @@ void Killbox::doDraw() const
             m_drawableT->update(0.0f);
             m_drawableT->draw(renderTarget());
 
-            auto numberOfMiddlePartsY = static_cast<int>(m_rect.height) / 16 - 2;
+            auto numberOfMiddlePartsY = std::max(0, static_cast<int>(m_rect.height) / 16 - 2);
+            if (numberOfMiddlePartsX == 0)
+                break;
 
             for (int j = 0; j != numberOfMiddlePartsY; ++j) {
                 m_drawableM->setPosition(
