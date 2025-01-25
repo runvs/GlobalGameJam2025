@@ -49,7 +49,7 @@ void StateGame::onCreate()
         });
     add(m_particlesBubbleExhaust);
 
-    CreatePlayer();
+    createPlayer();
     auto const playerGroundContactListener = std::make_shared<ContactCallbackPlayerGround>();
     playerGroundContactListener->setPlayer(m_player);
     m_world->getContactManager().registerCallback("player_ground0", playerGroundContactListener);
@@ -176,7 +176,7 @@ void StateGame::onDraw() const
     m_vignette->draw();
 }
 
-void StateGame::CreatePlayer()
+void StateGame::createPlayer()
 {
     m_player = std::make_shared<Player>(m_world, m_particlesBubbleExhaust, m_levelName);
     m_player->setPosition(m_level->getPlayerStart());
