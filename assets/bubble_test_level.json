@@ -29,6 +29,35 @@
          "y":0
         }, 
         {
+         "color":"#ffff00",
+         "draworder":"topdown",
+         "id":11,
+         "name":"powerups",
+         "objects":[
+                {
+                 "height":16,
+                 "id":433,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"soap"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":32,
+                 "y":192
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
          "draworder":"topdown",
          "id":7,
          "name":"coins",
@@ -259,18 +288,6 @@
          "y":0
         }, 
         {
-         "color":"#ffff00",
-         "draworder":"topdown",
-         "id":9,
-         "name":"postcards",
-         "objects":[],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
          "draworder":"topdown",
          "id":2,
          "name":"settings",
@@ -287,7 +304,7 @@
                  "y":128
                 }, 
                 {
-                 "height":8,
+                 "height":48,
                  "id":403,
                  "name":"exit",
                  "properties":[
@@ -299,9 +316,9 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":8,
-                 "x":352,
-                 "y":48
+                 "width":48,
+                 "x":320,
+                 "y":32
                 }, 
                 {
                  "height":8,
@@ -341,8 +358,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":10,
- "nextobjectid":431,
+ "nextlayerid":12,
+ "nextobjectid":434,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.1",
