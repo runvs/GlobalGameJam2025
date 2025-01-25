@@ -1,5 +1,7 @@
 
 #include "killbox.hpp"
+
+#include "game_properties.hpp"
 #include <game_interface.hpp>
 #include <math_helper.hpp>
 #include <sprite.hpp>
@@ -49,10 +51,25 @@ void Killbox::doDraw() const
 void Killbox::checkIfPlayerIsInKillbox(
     jt::Vector2f const& playerPosition, std::function<void(void)> callback) const
 {
-    if (jt::MathHelper::checkIsIn(m_rect, playerPosition)) {
-        getGame()->logger().info(
-            "Player killed by killbox '" + m_name + "'", { "demo", "killbox" });
-        callback();
+    for (auto const& positionToCheck : {
+             // clang-format off
+    playerPosition,
+    playerPosition + jt::Vector2f{GP::PlayerSize().x *0.0f, GP::PlayerSize().y *0.5f},
+    playerPosition + jt::Vector2f{GP::PlayerSize().x *0.0f, -GP::PlayerSize().y *0.5f},
+    playerPosition + jt::Vector2f{GP::PlayerSize().x *0.5f, GP::PlayerSize().y *0.0f},
+    playerPosition + jt::Vector2f{-GP::PlayerSize().x *0.5f, -GP::PlayerSize().y *0.0f},
+
+    playerPosition + jt::Vector2f{GP::PlayerSize().x *0.5f, GP::PlayerSize().y *0.5f},
+    playerPosition + jt::Vector2f{GP::PlayerSize().x *0.5f, -GP::PlayerSize().y *0.5f},
+    playerPosition + jt::Vector2f{-GP::PlayerSize().x *0.5f, GP::PlayerSize().y *0.5f},
+    playerPosition + jt::Vector2f{-GP::PlayerSize().x *0.5f, -GP::PlayerSize().y *0.5f}
+             // clang-format on
+         }) {
+        if (jt::MathHelper::checkIsIn(m_rect, positionToCheck)) {
+            getGame()->logger().info(
+                "Player killed by killbox '" + m_name + "'", { "demo", "killbox" });
+            callback();
+        }
     }
 }
 
