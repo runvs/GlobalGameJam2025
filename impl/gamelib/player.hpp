@@ -37,6 +37,8 @@ private:
     std::shared_ptr<jt::Shape> m_punctureIndicator;
     std::shared_ptr<jt::Box2DObject> m_physicsObject;
 
+    float m_bubbleVolume { 1.0 };
+
     bool m_isTouchingGround { false };
     bool m_wasTouchingGroundLastFrame { false };
 

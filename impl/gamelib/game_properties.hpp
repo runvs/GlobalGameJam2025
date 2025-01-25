@@ -49,6 +49,7 @@ public:
     static float PlayerMovementDampeningFactor();
     static float PlayerBlowoutForceFactor();
     static int GamepadIndex();
+    static float BubbleVolumeLossFactor();
 };
 
 #endif
