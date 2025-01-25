@@ -13,7 +13,7 @@ class Player : public jt::GameObject {
 public:
     using Sptr = std::shared_ptr<Player>;
     Player(std::shared_ptr<jt::Box2DWorldInterface> world,
-        std::weak_ptr<jt::ParticleSystem<jt::Shape, 100>> exhaustParticleSFstem);
+        std::weak_ptr<jt::ParticleSystem<jt::Animation, 100>> exhaustParticleSFstem);
 
     ~Player() override = default;
 
@@ -38,7 +38,7 @@ private:
     std::shared_ptr<jt::Shape> m_indicator;
     std::shared_ptr<jt::Shape> m_punctureIndicator;
     std::shared_ptr<jt::Box2DObject> m_physicsObject;
-    std::weak_ptr<jt::ParticleSystem<jt::Shape, 100>> m_exhaustParticleSystem;
+    std::weak_ptr<jt::ParticleSystem<jt::Animation, 100>> m_exhaustParticleSystem;
 
     int m_particleFrameCount { 0 };
 

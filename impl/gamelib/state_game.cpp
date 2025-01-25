@@ -26,9 +26,13 @@ void StateGame::onCreate()
 
     loadLevel();
 
-    m_particlesBubbleExhaust = jt::ParticleSystem<jt::Shape, 100>::createPS(
+    m_particlesBubbleExhaust = jt::ParticleSystem<jt::Animation, 100>::createPS(
         [this]() {
-            auto a = jt::dh::createShapeRect({ 4.0f, 4.0f }, jt::colors::Black, textureManager());
+            auto a = std::make_shared<jt::Animation>();
+            a->loadFromAseprite("assets/particles.aseprite", textureManager());
+
+            a->play(std::to_string(jt::Random::getInt(0, 6)));
+
             a->setPosition({ -2000, -2000 });
             a->setOrigin(jt::OriginMode::CENTER);
             return a;
@@ -42,6 +46,7 @@ void StateGame::onCreate()
             add(jt::TweenPosition::create(
                 a, 1.0, pos, pos + direction * 20 + jt::Random::getRandomPointInCircle(8)));
             add(jt::TweenAlpha::create(a, 1.0, 255, 0));
+            add(jt::TweenScale::create(a, 1.0, { .5, .5 }, { 1.0, 1.0 }));
         });
     add(m_particlesBubbleExhaust);
 

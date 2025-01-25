@@ -8,7 +8,7 @@
 #include <user_data_entries.hpp>
 
 Player::Player(std::shared_ptr<jt::Box2DWorldInterface> world,
-    std::weak_ptr<jt::ParticleSystem<jt::Shape, 100>> exhaustParticleSFstem)
+    std::weak_ptr<jt::ParticleSystem<jt::Animation, 100>> exhaustParticleSFstem)
     : m_exhaustParticleSystem { exhaustParticleSFstem }
 {
     b2BodyDef bodyDef;
