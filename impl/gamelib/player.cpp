@@ -4,7 +4,6 @@
 #include "game_properties.hpp"
 #include <conversions.hpp>
 #include <game_interface.hpp>
-#include <line.hpp>
 #include <math_helper.hpp>
 #include <user_data_entries.hpp>
 
@@ -129,6 +128,7 @@ void Player::handleMovement(float const elapsed)
                 m_punctureTimer = GP::PlayerInputPunctureDeadTime();
                 m_velocities.push_back(-1.0f * m_indicatorVec);
             }
+            // if (gp->justPressed())
         }
     }
 
@@ -146,8 +146,6 @@ void Player::handleMovement(float const elapsed)
     auto v = m_physicsObject->getVelocity();
     v *= GP::PlayerMovementDampeningFactor();
     m_physicsObject->setVelocity(v);
-
-    std::cout << v.x << " " << v.y << std::endl;
 }
 
 b2Body* Player::getB2Body() { return m_physicsObject->getB2Body(); }
