@@ -75,9 +75,7 @@ void StateGame::onUpdate(float const elapsed)
 {
 
     if (!m_ending && !getGame()->stateManager().getTransition()->isInProgress()) {
-        std::int32_t const velocityIterations = 20;
-        std::int32_t const positionIterations = 20;
-        m_world->step(elapsed, velocityIterations, positionIterations);
+        m_world->step(elapsed, GP::PhysicVelocityIterations(), GP::PhysicPositionIterations());
 
         if (!m_player->isAlive()) {
 
