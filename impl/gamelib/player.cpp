@@ -68,9 +68,7 @@ void Player::doUpdate(float const elapsed)
     m_physicsObject->setPosition(currentPosition);
     m_animation->setPosition(currentPosition);
     m_bubble->setPosition(currentPosition
-        + jt::Vector2f { std::sin(getAge() * 0.4123f) * 2.0f, std::sin(getAge() * 0.5f) * 4.0f });
-
-    m_wasTouchingGroundLastFrame = m_isTouchingGround;
+        + jt::Vector2f { std::sin(getAge() * 0.4123f) * 2.0f, std::sin(getAge() * 0.5f) * 2.0f });
 
     m_lastTouchedGroundTimer -= elapsed;
 }
@@ -96,7 +94,29 @@ void Player::clampPositionToLevelSize(jt::Vector2f& currentPosition) const
 
 void Player::updateAnimation(float const elapsed)
 {
-    // TODO add poke animations
+    if (m_hasStabbed) {
+        m_hasStabbed = false;
+        m_stabbedCooldown = 0.4f;
+        if (std::abs(m_indicatorVec.x) > std::abs(m_indicatorVec.y)) {
+            if (m_indicatorVec.x > 0) {
+                m_animation->play("stab-right");
+            } else {
+                m_animation->play("stab-left");
+            }
+        } else {
+            if (m_indicatorVec.y > 0) {
+                m_animation->play("stab-down");
+            } else {
+                m_animation->play("stab-up");
+            }
+        }
+    }
+    if (m_stabbedCooldown > 0.0f) {
+        m_stabbedCooldown -= elapsed;
+        if (m_stabbedCooldown <= 0) {
+            m_animation->play("idle");
+        }
+    }
 
     if (isInBubble()) {
         int const index = std::clamp(static_cast<int>(m_bubbleVolume * 7), 0, 6);
@@ -133,6 +153,7 @@ void Player::handleMovement(float const elapsed)
                 if (gp->justPressed(jt::GamepadButtonCode::GBA)) {
                     m_punctureTimer = GP::PlayerInputPunctureDeadTime();
                     m_velocities.push_back(-1.0f * m_indicatorVec);
+                    m_hasStabbed = true;
                 }
                 if (gp->justPressed(jt::GamepadButtonCode::GBB)) {
                     m_punctureTimer = GP::PlayerInputPunctureDeadTime();
@@ -182,15 +203,6 @@ void Player::doDraw() const
         if (jt::MathHelper::length(m_indicatorVec) > 0.2f) {
             m_indicator->draw(renderTarget());
         }
-    }
-}
-
-void Player::setTouchesGround(bool touchingGround)
-{
-    auto const m_postDropJumpTimeFrame = 0.2f; // coyote time
-    m_isTouchingGround = touchingGround;
-    if (m_isTouchingGround) {
-        m_lastTouchedGroundTimer = m_postDropJumpTimeFrame;
     }
 }
 

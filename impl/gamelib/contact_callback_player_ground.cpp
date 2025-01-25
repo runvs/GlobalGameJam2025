@@ -14,7 +14,6 @@ void ContactCallbackPlayerGround::onBeginContact(b2Contact* contact)
     if (isPlayerFeetFixture(fa) || isPlayerFeetFixture(fb)) {
         m_numberOfFeetContacts++;
     }
-    p->setTouchesGround(m_numberOfFeetContacts >= 1);
 }
 
 void ContactCallbackPlayerGround::onEndContact(b2Contact* contact)
@@ -29,7 +28,6 @@ void ContactCallbackPlayerGround::onEndContact(b2Contact* contact)
     if (isPlayerFeetFixture(fa) || isPlayerFeetFixture(fb)) {
         m_numberOfFeetContacts--;
     }
-    p->setTouchesGround(m_numberOfFeetContacts >= 1);
 }
 
 void ContactCallbackPlayerGround::setPlayer(std::weak_ptr<Player> player) { m_player = player; }

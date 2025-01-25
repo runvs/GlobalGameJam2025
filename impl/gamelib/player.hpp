@@ -20,8 +20,6 @@ public:
     std::shared_ptr<jt::Animation> getAnimation();
     b2Body* getB2Body();
 
-    void setTouchesGround(bool touchingGround);
-
     jt::Vector2f getPosOnScreen() const;
     void setPosition(jt::Vector2f const& pos);
     jt::Vector2f getPosition() const;
@@ -43,9 +41,6 @@ private:
 
     float m_bubbleVolume { 1.0 };
 
-    bool m_isTouchingGround { false };
-    bool m_wasTouchingGroundLastFrame { false };
-
     bool m_isMoving { false };
     jt::Vector2f m_levelSizeInTiles { 0.0f, 0.0f };
 
@@ -57,6 +52,8 @@ private:
     jt::Vector2f m_indicatorVec;
     float m_punctureTimer { 0.0f };
     std::vector<jt::Vector2f> m_velocities;
+    bool m_hasStabbed { false };
+    float m_stabbedCooldown { 0.2f };
 
     void doCreate() override;
 
