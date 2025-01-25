@@ -1,4 +1,6 @@
 ﻿#include "main.hpp"
+
+#include "input/keyboard/keyboard_input_selected_keys.hpp"
 #include <action_commands/action_command_manager.hpp>
 #include <action_commands/basic_action_commands.hpp>
 #include <audio/audio/audio_impl.hpp>
@@ -55,7 +57,42 @@ int main(int /*argc*/, char* /*argv*/[])
     jt::GfxImpl gfx { loggingRenderWindow, loggingCamera };
 
     auto const mouse = std::make_shared<jt::MouseInput>();
-    auto const keyboard = std::make_shared<jt::KeyboardInput>();
+    auto const keyboard = std::make_shared<jt::KeyboardInputSelectedKeys>();
+
+    keyboard->listenForKey(jt::KeyCode::W);
+    keyboard->listenForKey(jt::KeyCode::A);
+    keyboard->listenForKey(jt::KeyCode::S);
+    keyboard->listenForKey(jt::KeyCode::D);
+
+    keyboard->listenForKey(jt::KeyCode::Left);
+    keyboard->listenForKey(jt::KeyCode::Right);
+    keyboard->listenForKey(jt::KeyCode::Up);
+    keyboard->listenForKey(jt::KeyCode::Down);
+
+    keyboard->listenForKey(jt::KeyCode::C);
+    keyboard->listenForKey(jt::KeyCode::V);
+    keyboard->listenForKey(jt::KeyCode::I);
+
+    keyboard->listenForKey(jt::KeyCode::Num0);
+    keyboard->listenForKey(jt::KeyCode::Num1);
+    keyboard->listenForKey(jt::KeyCode::Num2);
+    keyboard->listenForKey(jt::KeyCode::Num3);
+    keyboard->listenForKey(jt::KeyCode::Num4);
+    keyboard->listenForKey(jt::KeyCode::Num5);
+    keyboard->listenForKey(jt::KeyCode::Num6);
+    keyboard->listenForKey(jt::KeyCode::Num7);
+    keyboard->listenForKey(jt::KeyCode::Num8);
+    keyboard->listenForKey(jt::KeyCode::Num9);
+
+    keyboard->listenForKey(jt::KeyCode::F10);
+    keyboard->listenForKey(jt::KeyCode::F1);
+
+    keyboard->listenForKey(jt::KeyCode::Home);
+    keyboard->listenForKey(jt::KeyCode::End);
+
+    keyboard->listenForKey(jt::KeyCode::Escape);
+    keyboard->listenForKey(jt::KeyCode::Space);
+
     auto const gamepad0 = std::make_shared<jt::GamepadInput>(0);
     jt::InputManager input { mouse, keyboard, { gamepad0 } };
 
