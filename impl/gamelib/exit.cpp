@@ -8,20 +8,22 @@ Exit::Exit(jt::tilemap::InfoRect const& rect) { m_info = rect; }
 
 void Exit::doCreate()
 {
-    m_sprite = std::make_shared<jt::Sprite>("assets/exit.png", textureManager());
-
-    m_sprite->setPosition(m_info.position);
+    m_animation = std::make_shared<jt::Animation>();
+    m_animation->loadFromAseprite("assets/goal.aseprite", textureManager());
+    m_animation->play("idle");
+    m_animation->setPosition(m_info.position);
 }
 
-void Exit::doUpdate(float const elapsed) { m_sprite->update(elapsed); }
+void Exit::doUpdate(float const elapsed) { m_animation->update(elapsed); }
 
-void Exit::doDraw() const { m_sprite->draw(renderTarget()); }
+void Exit::doDraw() const { m_animation->draw(renderTarget()); }
 
 void Exit::checkIfPlayerIsInExit(
     jt::Vector2f const& playerPosition, std::function<void(std::string const&)> callback)
 {
 
-    jt::Rectf const exitRect { m_info.position.x, m_info.position.y, m_info.size.x, m_info.size.y };
+    jt::Rectf const exitRect { m_info.position.x + 8, m_info.position.y + 8, m_info.size.x - 16,
+        m_info.size.y - 16 };
 
     for (auto const& positionToCheck : {
              // clang-format off

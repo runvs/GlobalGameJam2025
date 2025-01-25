@@ -7,6 +7,10 @@
 #include <functional>
 #include <memory>
 
+namespace jt {
+class Animation;
+}
+
 class Exit : public jt::GameObject {
 public:
     explicit Exit(jt::tilemap::InfoRect const& rect);
@@ -16,7 +20,7 @@ public:
 
 private:
     jt::tilemap::InfoRect m_info {};
-    std::shared_ptr<jt::Sprite> m_sprite { nullptr };
+    std::shared_ptr<jt::Animation> m_animation { nullptr };
 
     void doCreate() override;
     void doUpdate(float const elapsed) override;

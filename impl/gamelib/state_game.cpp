@@ -73,7 +73,6 @@ void StateGame::loadLevel()
 
 void StateGame::onUpdate(float const elapsed)
 {
-
     if (!m_ending && !getGame()->stateManager().getTransition()->isInProgress()) {
         m_world->step(elapsed, GP::PhysicVelocityIterations(), GP::PhysicPositionIterations());
 
