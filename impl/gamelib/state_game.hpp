@@ -37,7 +37,7 @@ private:
     void onUpdate(float const /*elapsed*/) override;
     void onDraw() const override;
 
-    void CreatePlayer();
+    void createPlayer();
     void loadLevel();
     void handleCameraScrolling(float const elapsed);
     void endGame();

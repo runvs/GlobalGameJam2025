@@ -49,7 +49,7 @@ void StateGame::onCreate()
         });
     add(m_particlesBubbleExhaust);
 
-    CreatePlayer();
+    createPlayer();
     auto const playerGroundContactListener = std::make_shared<ContactCallbackPlayerGround>();
     playerGroundContactListener->setPlayer(m_player);
     m_world->getContactManager().registerCallback("player_ground0", playerGroundContactListener);
@@ -119,9 +119,9 @@ void StateGame::onUpdate(float const elapsed)
     if (getGame()->input().keyboard()->justPressed(jt::KeyCode::F1)
         || getGame()->input().keyboard()->justPressed(jt::KeyCode::Escape)
         || getGame()
-            ->input()
-            .gamepad(GP::GamepadIndex())
-            ->justPressed(jt::GamepadButtonCode::GBBack)) {
+               ->input()
+               .gamepad(GP::GamepadIndex())
+               ->justPressed(jt::GamepadButtonCode::GBBack)) {
         getGame()->stateManager().switchState(std::make_shared<StateMenu>());
     }
 }
@@ -176,9 +176,9 @@ void StateGame::onDraw() const
     m_vignette->draw();
 }
 
-void StateGame::CreatePlayer()
+void StateGame::createPlayer()
 {
-    m_player = std::make_shared<Player>(m_world, m_particlesBubbleExhaust);
+    m_player = std::make_shared<Player>(m_world, m_particlesBubbleExhaust, m_levelName);
     m_player->setPosition(m_level->getPlayerStart());
     m_player->setLevelSize(m_level->getLevelSizeInPixel());
     m_player->setAvailablePatches(m_level->getNumberOfInitiallyAvailablePatches());

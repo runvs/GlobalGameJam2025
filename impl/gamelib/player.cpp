@@ -6,11 +6,14 @@
 #include <game_interface.hpp>
 #include <math_helper.hpp>
 #include <random/random.hpp>
+#include <state_game.hpp>
 #include <user_data_entries.hpp>
 
 Player::Player(std::shared_ptr<jt::Box2DWorldInterface> world,
-    std::weak_ptr<jt::ParticleSystem<jt::Animation, 100>> exhaustParticleSFstem)
+    std::weak_ptr<jt::ParticleSystem<jt::Animation, 100>> exhaustParticleSFstem,
+    std::string const& currentLevelName)
     : m_exhaustParticleSystem { exhaustParticleSFstem }
+    , m_currentLevelName { currentLevelName }
 {
     b2BodyDef bodyDef;
     bodyDef.fixedRotation = true;
@@ -84,7 +87,9 @@ void Player::doUpdate(float const elapsed)
         + jt::Vector2f { std::sin(getAge() * 0.4123f) * 2.0f, std::sin(getAge() * 0.5f) * 2.0f }
             * std::clamp(m_bubbleVolume * 2.0f, 0.0f, 1.0f));
 
-    m_lastTouchedGroundTimer -= elapsed;
+    handleOutsideBubbleWithoutMovement(elapsed);
+
+    m_previousPosition = m_animation->getPosition();
 }
 
 void Player::clampPositionToLevelSize(jt::Vector2f& currentPosition) const
@@ -228,6 +233,21 @@ void Player::handleMovement(float const elapsed)
     } else {
         // TODO movement for outside bubble
         getB2Body()->ApplyForceToCenter(b2Vec2 { 0.0f, 10000.0f }, true);
+    }
+}
+
+void Player::handleOutsideBubbleWithoutMovement(float const elapsed)
+{
+    if (isInBubble() || m_previousPosition != m_animation->getPosition()) {
+        m_timeWithoutBubbleOrMovement = 0.0f;
+        return;
+    }
+
+    m_timeWithoutBubbleOrMovement += elapsed;
+
+    if (m_timeWithoutBubbleOrMovement >= GP::PlayerWithoutBubbleOrMovementDeathTimer()) {
+        // he's dead, Jim
+        getGame()->stateManager().switchState(std::make_shared<StateGame>(m_currentLevelName));
     }
 }
 
