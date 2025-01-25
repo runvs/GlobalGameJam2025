@@ -268,3 +268,8 @@ bool Player::isInBubble() const { return m_bubbleVolume >= 0.0f; }
 void Player::resetBubbleVolume() { m_bubbleVolume = 1.0f; }
 
 void Player::addPatches() { m_patchesAvailable += 2; }
+
+void Player::setAvailablePatches(int numberOfAvailablePatches)
+{
+    m_patchesAvailable = numberOfAvailablePatches;
+}

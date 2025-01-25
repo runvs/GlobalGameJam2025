@@ -29,6 +29,8 @@ public:
 
     jt::Vector2f getLevelSizeInPixel() const;
 
+    int getNumberOfInitiallyAvailablePatches() const;
+
 private:
     void doCreate() override;
     void doUpdate(float const elapsed) override;
@@ -48,6 +50,8 @@ private:
     jt::Vector2f m_levelSizeInPixel { 0.0f, 0.0f };
 
     std::vector<std::shared_ptr<MovingPlatform>> m_movingPlatforms {};
+
+    int m_initiallyAvailablePatches { 0 };
 
     void loadLevelSettings(jt::tilemap::TilesonLoader& loader);
     void loadLevelTileLayer(jt::tilemap::TilesonLoader& loader);

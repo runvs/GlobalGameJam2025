@@ -162,6 +162,9 @@ void Level::loadLevelSettings(jt::tilemap::TilesonLoader& loader)
                 jt::Color { static_cast<uint8_t>(info.properties.ints.at("bg_r")),
                     static_cast<uint8_t>(info.properties.ints.at("bg_g")),
                     static_cast<uint8_t>(info.properties.ints.at("bg_b")) });
+            if (info.properties.ints.contains("initial_patches")) {
+                m_initiallyAvailablePatches = info.properties.ints.at("initial_patches");
+            }
         } else if (info.name == "player_start") {
             m_playerStart = info.position;
         } else if (info.name == "exit") {
@@ -240,3 +243,5 @@ void Level::checkIfPlayerIsInPowerup(
 }
 
 jt::Vector2f Level::getLevelSizeInPixel() const { return m_levelSizeInPixel; }
+
+int Level::getNumberOfInitiallyAvailablePatches() const { return m_initiallyAvailablePatches; }

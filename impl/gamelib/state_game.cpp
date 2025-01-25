@@ -181,6 +181,7 @@ void StateGame::CreatePlayer()
     m_player = std::make_shared<Player>(m_world, m_particlesBubbleExhaust);
     m_player->setPosition(m_level->getPlayerStart());
     m_player->setLevelSize(m_level->getLevelSizeInPixel());
+    m_player->setAvailablePatches(m_level->getNumberOfInitiallyAvailablePatches());
     add(m_player);
 
     getGame()->gfx().camera().setCamOffset(m_level->getPlayerStart() - GP::GetScreenSize() * 0.5f);

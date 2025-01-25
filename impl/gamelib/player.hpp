@@ -33,6 +33,7 @@ public:
     void resetBubbleVolume();
 
     void addPatches();
+    void setAvailablePatches(int numberOfAvailablePatches);
 
 private:
     std::shared_ptr<jt::Animation> m_animation;
