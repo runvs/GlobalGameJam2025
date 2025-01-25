@@ -7,7 +7,6 @@
 #include <input/input_manager.hpp>
 #include <lerp.hpp>
 #include <log/license_info.hpp>
-#include <algorithm>
 #include <screeneffects/vignette.hpp>
 #include <state_game.hpp>
 #include <state_manager/state_manager_transition_fade_to_black.hpp>
@@ -15,6 +14,7 @@
 #include <tweens/tween_alpha.hpp>
 #include <tweens/tween_color.hpp>
 #include <tweens/tween_position.hpp>
+#include <algorithm>
 
 void StateMenu::onCreate()
 {
@@ -201,10 +201,20 @@ void StateMenu::updateDrawables(float const& elapsed)
 
 void StateMenu::checkForTransitionToStateGame()
 {
+    auto const& kb = getGame()->input().keyboard();
+    auto const& gp = getGame()->input().gamepad(GP::GamepadIndex());
+
     auto const keysToTriggerTransition = { jt::KeyCode::Space, jt::KeyCode::Enter };
 
-    if (std::any_of(std::begin(keysToTriggerTransition),std::end(keysToTriggerTransition) ,
-            [this](auto const k) { return getGame()->input().keyboard()->justPressed(k); })) {
+    if (std::any_of(std::begin(keysToTriggerTransition), std::end(keysToTriggerTransition),
+            [&kb](auto const k) { return kb->justPressed(k); })) {
+        startTransitionToStateGame();
+    }
+
+    auto const buttonsToTriggerTransition = { jt::GamepadButtonCode::GBA };
+
+    if (std::any_of(std::begin(buttonsToTriggerTransition), std::end(buttonsToTriggerTransition),
+            [&gp](auto const k) { return gp->justPressed(k); })) {
         startTransitionToStateGame();
     }
 }
