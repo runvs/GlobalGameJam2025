@@ -7,7 +7,9 @@
 #include <math_helper.hpp>
 #include <user_data_entries.hpp>
 
-Player::Player(std::shared_ptr<jt::Box2DWorldInterface> world)
+Player::Player(std::shared_ptr<jt::Box2DWorldInterface> world,
+    std::weak_ptr<jt::ParticleSystem<jt::Shape, 100>> exhaustParticleSFstem)
+    : m_exhaustParticleSystem { exhaustParticleSFstem }
 {
     b2BodyDef bodyDef;
     bodyDef.fixedRotation = true;
@@ -62,6 +64,15 @@ void Player::doUpdate(float const elapsed)
 
     updateAnimation(elapsed);
     handleMovement(elapsed);
+
+    if (++m_particleFrameCount >= 30) {
+        m_particleFrameCount = 0;
+
+        for (auto const& v : m_velocities) {
+            auto const position = (m_animation->getPosition() - v * 16.0f);
+            m_exhaustParticleSystem.lock()->fire(1, position);
+        }
+    }
 
     auto currentPosition = m_physicsObject->getPosition();
     clampPositionToLevelSize(currentPosition);

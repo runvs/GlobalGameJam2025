@@ -1,5 +1,6 @@
 ﻿#include "state_game.hpp"
 
+#include "drawable_helpers.hpp"
 #include "tweens/tween_scale.hpp"
 #include <box2dwrapper/box2d_contact_manager.hpp>
 #include <box2dwrapper/box2d_world_impl.hpp>
@@ -24,6 +25,25 @@ void StateGame::onCreate()
         = std::make_shared<jt::Box2DWorldImpl>(jt::Vector2f { 0.0f, 0.0f }, loggingContactManager);
 
     loadLevel();
+
+    m_particlesBubbleExhaust = jt::ParticleSystem<jt::Shape, 100>::createPS(
+        [this]() {
+            auto a = jt::dh::createShapeRect({ 4.0f, 4.0f }, jt::colors::Black, textureManager());
+            a->setPosition({ -2000, -2000 });
+            a->setOrigin(jt::OriginMode::CENTER);
+            return a;
+        },
+        [this](auto& a, auto pos) {
+            a->setPosition(pos);
+            a->update(0.0f);
+            auto const playerPosition = this->m_player->getAnimation()->getPosition();
+            auto direction = pos - playerPosition;
+            jt::MathHelper::normalizeMe(direction);
+            add(jt::TweenPosition::create(
+                a, 1.0, pos, pos + direction * 20 + jt::Random::getRandomPointInCircle(8)));
+            add(jt::TweenAlpha::create(a, 1.0, 255, 0));
+        });
+    add(m_particlesBubbleExhaust);
 
     CreatePlayer();
     auto const playerGroundContactListener = std::make_shared<ContactCallbackPlayerGround>();
@@ -84,9 +104,9 @@ void StateGame::onUpdate(float const elapsed)
     if (getGame()->input().keyboard()->justPressed(jt::KeyCode::F1)
         || getGame()->input().keyboard()->justPressed(jt::KeyCode::Escape)
         || getGame()
-            ->input()
-            .gamepad(GP::GamepadIndex())
-            ->justPressed(jt::GamepadButtonCode::GBBack)) {
+               ->input()
+               .gamepad(GP::GamepadIndex())
+               ->justPressed(jt::GamepadButtonCode::GBBack)) {
         getGame()->stateManager().switchState(std::make_shared<StateMenu>());
     }
 }
@@ -137,12 +157,13 @@ void StateGame::onDraw() const
     m_level->draw();
 
     m_player->draw();
+    m_particlesBubbleExhaust->draw();
     m_vignette->draw();
 }
 
 void StateGame::CreatePlayer()
 {
-    m_player = std::make_shared<Player>(m_world);
+    m_player = std::make_shared<Player>(m_world, m_particlesBubbleExhaust);
     m_player->setPosition(m_level->getPlayerStart());
     m_player->setLevelSize(m_level->getLevelSizeInPixel());
     add(m_player);
