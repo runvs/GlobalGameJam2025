@@ -2,7 +2,7 @@
 #include "killbox.hpp"
 
 #include "game_properties.hpp"
-#include <Sprite.hpp>
+#include <sprite.hpp>
 #include <game_interface.hpp>
 #include <math_helper.hpp>
 
