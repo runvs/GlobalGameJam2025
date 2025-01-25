@@ -188,6 +188,7 @@ void Level::doUpdate(float const elapsed)
 {
     m_flatColorBackground->update(elapsed);
     m_background->update(elapsed);
+    m_tileLayerGround->update(elapsed);
 
     for (auto& exit : m_exits) {
         exit.update(elapsed);
@@ -207,8 +208,8 @@ void Level::doDraw() const
 {
     m_flatColorBackground->draw(renderTarget());
     m_background->draw(renderTarget());
-
     m_tileLayerGround->draw(renderTarget());
+
     for (auto const& exit : m_exits) {
         exit.draw();
     }
