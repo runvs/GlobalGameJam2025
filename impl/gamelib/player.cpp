@@ -80,7 +80,8 @@ void Player::doUpdate(float const elapsed)
     m_physicsObject->setPosition(currentPosition);
     m_animation->setPosition(currentPosition);
     m_bubble->setPosition(currentPosition
-        + jt::Vector2f { std::sin(getAge() * 0.4123f) * 2.0f, std::sin(getAge() * 0.5f) * 2.0f });
+        + jt::Vector2f { std::sin(getAge() * 0.4123f) * 2.0f, std::sin(getAge() * 0.5f) * 2.0f }
+            * std::clamp(m_bubbleVolume * 2.0f, 0.0f, 1.0f));
 
     m_lastTouchedGroundTimer -= elapsed;
 }
