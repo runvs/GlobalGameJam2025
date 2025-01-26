@@ -58,6 +58,7 @@ void StateGame::onCreate()
 
     auto const playerGroundContactListener = std::make_shared<ContactCallbackPlayerGround>();
     playerGroundContactListener->setPlayer(m_player);
+
     m_world->getContactManager().registerCallback("player_ground0", playerGroundContactListener);
 
     auto playerEnemyContactListener = std::make_shared<ContactCallbackPlayerEnemy>();

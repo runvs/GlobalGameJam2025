@@ -7,13 +7,14 @@
 
 void Hud::setPatches(int p)
 {
-    m_numberOfAvailablePatches = p - 1;
+    m_numberOfAvailablePatches = p;
     m_numberOfAvailablePatches
         = std::clamp(m_numberOfAvailablePatches, 0, static_cast<int>(m_patches.size()) - 1);
     for (auto i = 0; i < m_patches.size(); i++) {
-        bool visible = i <= m_numberOfAvailablePatches;
+        bool visible = i <= m_numberOfAvailablePatches - 1;
         m_patches[i]->setColor(jt::Color { 255, 255, 255, std::uint8_t(visible ? 255u : 0u) });
     }
+    m_numberOfAvailablePatches = m_numberOfAvailablePatches - 1;
 }
 
 void Hud::addPatches(int p, std::function<void(std::shared_ptr<jt::Sprite>)> const& cb)
