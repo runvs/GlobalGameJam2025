@@ -39,10 +39,11 @@ void Hud::doCreate()
     for (auto i = 0; i != 20; ++i) {
         auto sprite = std::make_shared<jt::Sprite>(
             "assets/patch.aseprite", jt::Recti { 0, 0, 16, 16 }, textureManager());
-        float const x = (i % 10) * 12;
-        float const y = (i / 10) * 16;
+        float const x = (i % 10) * 12 + 6;
+        float const y = (i / 10) * 16 + 8;
         sprite->setPosition({ x, y });
         sprite->setIgnoreCamMovement(true);
+        sprite->setOrigin(jt::OriginMode::CENTER);
         m_patches.push_back(sprite);
     }
 }

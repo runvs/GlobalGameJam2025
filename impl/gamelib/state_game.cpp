@@ -193,8 +193,12 @@ void StateGame::createPlayer()
 
     getGame()->gfx().camera().setCamOffset(m_level->getPlayerStart() - GP::GetScreenSize() * 0.5f);
     m_player->setPatchUsedCallback([this]() {
-        m_hud->removePatch(
-            [this](std::shared_ptr<jt::Sprite> p) { p->setColor(jt::Color { 255, 255, 255, 0 }); });
+        m_hud->removePatch([this](std::shared_ptr<jt::Sprite> p) {
+            p->flash(0.3f, { jt::Color { 255, 255, 255, 100 } });
+            add(jt::TweenAlpha::create(p, 0.4f, 255, 0));
+            add(jt::TweenScale::create(
+                p, 0.4f, jt::Vector2f { 1.0f, 1.0f }, jt::Vector2f { 1.5f, 1.5f }));
+        });
     });
 }
 
