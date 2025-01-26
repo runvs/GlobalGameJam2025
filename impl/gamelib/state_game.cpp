@@ -95,25 +95,23 @@ void StateGame::onUpdate(float const elapsed)
         m_world->step(elapsed, GP::PhysicVelocityIterations(), GP::PhysicPositionIterations());
 
         if (!m_player->isAlive()) {
-            endGame();
+            restartLevel();
         }
 
         m_level->checkIfPlayerIsInExit(
             m_player->getPosition(), [this](std::string const& newLevelName) {
                 if (!m_ending) {
-                    m_ending = true;
                     auto snd = getGame()->audio().addTemporarySound("event:/sfx/goal");
                     snd->play();
 
-                    getGame()->stateManager().switchState(
-                        std::make_shared<StateGame>(newLevelName));
+                    transitionToLevel(newLevelName);
                 }
             });
 
         m_level->checkIfPlayerIsInKillbox(m_player->getPosition(), [this]() {
             auto const dieSound = getGame()->audio().addTemporarySound("event:/death-by-spikes-p1");
             dieSound->play();
-            endGame();
+            restartLevel();
         });
         m_level->checkIfPlayerIsInPowerup(
             m_player->getPosition(), [this](ePowerUpType t, PowerUp* pu) {
@@ -143,7 +141,7 @@ void StateGame::onUpdate(float const elapsed)
     }
 }
 
-void StateGame::endGame()
+void StateGame::restartLevel()
 {
     if (!m_ending) {
         m_ending = true;
@@ -151,6 +149,19 @@ void StateGame::endGame()
             = jt::TweenAlpha::create(m_overlay, 1.0f, std::uint8_t { 0 }, std::uint8_t { 255 });
         tween->addCompleteCallback([this]() {
             getGame()->stateManager().switchState(std::make_shared<StateGame>(m_levelName));
+        });
+        add(tween);
+    }
+}
+
+void StateGame::transitionToLevel(std::string const& newLevelName)
+{
+    if (!m_ending) {
+        m_ending = true;
+        auto const tween
+            = jt::TweenAlpha::create(m_overlay, 1.0f, std::uint8_t { 0 }, std::uint8_t { 255 });
+        tween->addCompleteCallback([this, newLevelName]() {
+            getGame()->stateManager().switchState(std::make_shared<StateGame>(newLevelName));
         });
         add(tween);
     }

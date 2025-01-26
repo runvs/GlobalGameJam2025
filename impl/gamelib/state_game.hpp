@@ -48,7 +48,8 @@ private:
     void handleCheatModeActivation(float const elapsed);
     void handleCheats(float const elapsed);
     void handleCameraScrolling(float const elapsed);
-    void endGame();
+    void restartLevel();
+    void transitionToLevel(std::string const& newLevelName);
 };
 
 #endif // STATE_GAME
