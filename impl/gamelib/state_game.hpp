@@ -31,6 +31,7 @@ private:
     std::shared_ptr<Player> m_player { nullptr };
     std::shared_ptr<jt::Vignette> m_vignette { nullptr };
 
+    bool m_cheatsActive { false };
     bool m_ending { false };
 
     std::string getName() const override;
@@ -42,6 +43,9 @@ private:
 
     void createPlayer();
     void loadLevel();
+    void handleReturnToMainMenu(float const elapsed);
+    void handleCheatModeActivation(float const elapsed);
+    void handleCheats(float const elapsed);
     void handleCameraScrolling(float const elapsed);
     void endGame();
 };

@@ -23,8 +23,9 @@ public:
     b2Body* getB2Body();
 
     jt::Vector2f getPosOnScreen() const;
-    void setPosition(jt::Vector2f const& pos);
     jt::Vector2f getPosition() const;
+    void setPosition(jt::Vector2f const& pos);
+    void setVelocity(jt::Vector2f const& velocity);
 
     void setLevelSize(jt::Vector2f const& levelSizeInTiles);
 
@@ -73,7 +74,6 @@ private:
     void doUpdate(float elapsed) override;
     void doDraw() const override;
 
-    void handleCheats(float elapsed);
     void handleMovement(float elapsed);
     void handleOutsideBubbleWithoutMovement(float);
     void updateAnimation(float elapsed);
