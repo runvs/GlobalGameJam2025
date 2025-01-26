@@ -1,6 +1,7 @@
 ﻿#ifndef JAMTEMPLATE_DEMO_PLATFORM_PLAYER
 #define JAMTEMPLATE_DEMO_PLATFORM_PLAYER
 
+#include "audio/sound/sound_interface.hpp"
 #include <animation.hpp>
 #include <box2dwrapper/box2d_object.hpp>
 #include <game_object.hpp>
@@ -16,7 +17,7 @@ public:
         std::weak_ptr<jt::ParticleSystem<jt::Animation, 100>> exhaustParticleSFstem,
         std::string const& currentLevelName);
 
-    ~Player() override = default;
+    ~Player() override;
 
     std::shared_ptr<jt::Animation> getAnimation();
     b2Body* getB2Body();
@@ -79,6 +80,9 @@ private:
     bool m_horizontalMovement { false };
 
     int m_patchesAvailable { 2 };
+
+    std::shared_ptr<jt::SoundInterface> m_bubbleSounds;
+    std::shared_ptr<jt::SoundInterface> m_bubbleSoundsStrong;
 };
 
 #endif // JAMTEMPLATE_DEMO_PLATFORM_PLAYER
