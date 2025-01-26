@@ -55,11 +55,15 @@ void Player::doCreate()
     b2FixtureDef fixtureDef;
     fixtureDef.density = 1.0f;
     fixtureDef.friction = 0.5f;
-    b2CircleShape circleCollider {};
-    circleCollider.m_radius = GP::PlayerSize().x * 0.4f;
-    fixtureDef.shape = &circleCollider;
+    b2CircleShape circleShape {};
+    circleShape.m_radius = GP::PlayerSize().x * 0.4f;
+    fixtureDef.shape = &circleShape;
     auto playerCollider = m_physicsObject->getB2Body()->CreateFixture(&fixtureDef);
     playerCollider->SetUserData((void*)(g_userDataPlayerID));
+
+    circleShape.m_radius = m_bubbleVolume * 24.0f;
+    fixtureDef.shape = &circleShape;
+    m_bubbleSensorFixture = m_physicsObject->getB2Body()->CreateFixture(&fixtureDef);
 
     m_bubbleSounds = getGame()->audio().addTemporarySound("event:/sfx/bubbles");
     m_bubbleSounds->setVolume(0.0f);
@@ -71,9 +75,17 @@ std::shared_ptr<jt::Animation> Player::getAnimation() { return m_animation; }
 
 void Player::doUpdate(float const elapsed)
 {
+    m_physicsObject->getB2Body()->DestroyFixture(m_bubbleSensorFixture);
+
     b2FixtureDef fixtureDef;
     fixtureDef.isSensor = true;
-    b2PolygonShape polygonShape;
+    b2CircleShape circleShape {};
+
+    circleShape.m_radius = m_bubbleVolume * 24.0f;
+    fixtureDef.shape = &circleShape;
+    m_bubbleSensorFixture = m_physicsObject->getB2Body()->CreateFixture(&fixtureDef);
+
+    m_bubbleSensorFixture->SetUserData((void*)(g_userDataPlayerFeetID));
 
     if (m_puncturePoints.empty()) {
         m_bubbleSounds->setVolume(0.0f);
@@ -84,13 +96,6 @@ void Player::doUpdate(float const elapsed)
         m_bubbleSounds->setVolume(1.0f - v);
         m_bubbleSoundsStrong->setVolume(v);
     }
-
-    auto const rotDeg = -90;
-    auto const halfAxis = jt::MathHelper::rotateBy(jt::Vector2f { 3.0f, 0.2f }, rotDeg);
-    auto const center = jt::MathHelper::rotateBy(jt::Vector2f { 0, 4 }, rotDeg);
-
-    polygonShape.SetAsBox(halfAxis.x, halfAxis.y, jt::Conversion::vec(center), 0);
-    fixtureDef.shape = &polygonShape;
 
     updateAnimation(elapsed);
     handleMovement(elapsed);

@@ -46,6 +46,8 @@ private:
     std::shared_ptr<jt::Box2DObject> m_physicsObject;
     std::weak_ptr<jt::ParticleSystem<jt::Animation, 100>> m_exhaustParticleSystem;
 
+    b2Fixture* m_bubbleSensorFixture { nullptr };
+
     bool m_cheatsActive { false };
 
     int m_particleFrameCount { 0 };
