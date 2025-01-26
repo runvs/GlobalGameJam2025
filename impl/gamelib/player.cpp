@@ -203,6 +203,10 @@ void Player::updateAnimation(float const elapsed)
 
     m_animation->update(elapsed);
     m_bubble->update(elapsed);
+    auto const v = static_cast<std::uint8_t>(
+        255 * std::clamp(sin(getAge() * 8.0f) * sin(getAge() * 8.0f), 0.0f, 1.0f));
+    // std::cout << static_cast<int>(v) << "\n";
+    m_indicator->setColor(jt::Color { v, v, v, 255 });
     m_indicator->update(elapsed);
 }
 
@@ -307,11 +311,6 @@ void Player::doDraw() const
     m_bubble->draw(renderTarget());
 
     if (isInBubble()) {
-        for (auto const& v : m_puncturePoints) {
-            m_punctureIndicator->setPosition(m_animation->getPosition() - v * 16.0f);
-            m_punctureIndicator->update(0.0f);
-            m_punctureIndicator->draw(renderTarget());
-        }
         if (jt::MathHelper::length(m_indicatorVec) > 0.2f) {
             m_indicator->draw(renderTarget());
         }
