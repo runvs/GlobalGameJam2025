@@ -220,11 +220,11 @@ void Level::doDraw() const
     for (auto const& exit : m_exits) {
         exit.draw();
     }
-    for (auto const& p : m_movingPlatforms) {
-        p->draw();
-    }
     for (auto const& kb : m_killboxes) {
         kb->draw();
+    }
+    for (auto const& p : m_movingPlatforms) {
+        p->draw();
     }
     for (auto& pu : m_powerUps) {
         pu->draw();

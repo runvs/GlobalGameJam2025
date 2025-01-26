@@ -93,7 +93,6 @@ void Player::doUpdate(float const elapsed)
     fixtureDef.shape = &polygonShape;
 
     updateAnimation(elapsed);
-    handleCheats(elapsed);
     handleMovement(elapsed);
 
     if (++m_particleFrameCount >= 30) {
@@ -184,26 +183,6 @@ void Player::updateAnimation(float const elapsed)
     m_animation->update(elapsed);
     m_bubble->update(elapsed);
     m_indicator->update(elapsed);
-}
-
-void Player::handleCheats(float const elapsed)
-{
-    auto& input = getGame()->input();
-
-    if (input.keyboard()->justPressed(jt::KeyCode::F8)) {
-        m_cheatsActive = !m_cheatsActive;
-        std::cerr << "cheats: " << m_cheatsActive << std::endl;
-    }
-
-    if (!m_cheatsActive)
-        return;
-
-    if (input.keyboard()->justPressed(jt::KeyCode::J)) {
-        std::cerr << "cheats: J" << std::endl;
-        auto const worldPos = input.mouse()->getMousePositionWorld();
-        m_physicsObject->setVelocity({ 0.0f, 0.0f });
-        m_physicsObject->setPosition(worldPos);
-    }
 }
 
 void Player::handleMovement(float const elapsed)
@@ -317,9 +296,11 @@ void Player::doDraw() const
 
 jt::Vector2f Player::getPosOnScreen() const { return m_animation->getScreenPosition(); }
 
+jt::Vector2f Player::getPosition() const { return m_physicsObject->getPosition(); }
+
 void Player::setPosition(jt::Vector2f const& pos) { m_physicsObject->setPosition(pos); }
 
-jt::Vector2f Player::getPosition() const { return m_physicsObject->getPosition(); }
+void Player::setVelocity(jt::Vector2f const& velocity) { m_physicsObject->setVelocity(velocity); }
 
 void Player::setLevelSize(jt::Vector2f const& levelSizeInTiles)
 {

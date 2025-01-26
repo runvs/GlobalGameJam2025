@@ -77,12 +77,17 @@ void StateGame::loadLevel()
 
 void StateGame::onUpdate(float const elapsed)
 {
+    handleReturnToMainMenu(elapsed);
+
     m_hud->update(elapsed);
+
     if (!m_ending && !getGame()->stateManager().getTransition()->isInProgress()) {
+        handleCheatModeActivation(elapsed);
+        handleCheats(elapsed);
+
         m_world->step(elapsed, GP::PhysicVelocityIterations(), GP::PhysicPositionIterations());
 
         if (!m_player->isAlive()) {
-
             endGame();
         }
 
@@ -133,14 +138,6 @@ void StateGame::onUpdate(float const elapsed)
 
         handleCameraScrolling(elapsed);
     }
-    if (getGame()->input().keyboard()->justPressed(jt::KeyCode::F1)
-        || getGame()->input().keyboard()->justPressed(jt::KeyCode::Escape)
-        || getGame()
-            ->input()
-            .gamepad(GP::GamepadIndex())
-            ->justPressed(jt::GamepadButtonCode::GBBack)) {
-        getGame()->stateManager().switchState(std::make_shared<StateMenu>());
-    }
 }
 
 void StateGame::endGame()
@@ -148,6 +145,53 @@ void StateGame::endGame()
     if (!m_ending) {
         m_ending = true;
         getGame()->stateManager().switchState(std::make_shared<StateGame>(m_levelName));
+    }
+}
+
+void StateGame::handleReturnToMainMenu(float const elapsed)
+{
+    if (getGame()->input().keyboard()->justPressed(jt::KeyCode::F1)
+        || getGame()->input().keyboard()->justPressed(jt::KeyCode::Escape)
+        || getGame()
+               ->input()
+               .gamepad(GP::GamepadIndex())
+               ->justPressed(jt::GamepadButtonCode::GBBack)) {
+        getGame()->stateManager().switchState(std::make_shared<StateMenu>());
+    }
+}
+
+void StateGame::handleCheatModeActivation(float const elapsed)
+{
+    auto& input = getGame()->input();
+
+    if (input.keyboard()->justPressed(jt::KeyCode::F8)) {
+        m_cheatsActive = !m_cheatsActive;
+        std::cerr << "cheats " << (m_cheatsActive ? "on" : "off") << std::endl;
+    }
+}
+
+void StateGame::handleCheats(float const elapsed)
+{
+    if (!m_cheatsActive)
+        return;
+
+    auto const& keyboard = getGame()->input().keyboard();
+    auto const& mouse = getGame()->input().mouse();
+
+    if (keyboard->justPressed(jt::KeyCode::J)) {
+        std::cerr << "cheats: J" << std::endl;
+        auto const worldPos = mouse->getMousePositionWorld();
+        m_player->setVelocity({ 0.0f, 0.0f });
+        m_player->setPosition(worldPos);
+    }
+
+    if (keyboard->justPressed(jt::KeyCode::P)) {
+        m_player->addPatches();
+        m_hud->addPatches(GP::NumberOfPatchesPerPowerUp(), [this](std::shared_ptr<jt::Sprite> p) {
+            add(jt::TweenAlpha::create(p, 0.4, 0, 255));
+            add(jt::TweenScale::create(
+                p, 0.4, jt::Vector2f { 1.5f, 1.5f }, jt::Vector2f { 1.0f, 1.0f }));
+        });
     }
 }
 
