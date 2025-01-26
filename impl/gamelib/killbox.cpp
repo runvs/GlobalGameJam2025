@@ -21,35 +21,6 @@ Killbox::Killbox(jt::Rectf const& rect, std::string const& name, std::string con
 
 void Killbox::doCreate()
 {
-    if (m_type == "spike_down") {
-        m_drawableL = std::make_shared<jt::Sprite>(
-            "assets/tileset.png", jt::Recti { 48, 144, 16, 16 }, textureManager());
-        m_drawableM = std::make_shared<jt::Sprite>(
-            "assets/tileset.png", jt::Recti { 64, 144, 16, 16 }, textureManager());
-        m_drawableR = std::make_shared<jt::Sprite>(
-            "assets/tileset.png", jt::Recti { 80, 144, 16, 16 }, textureManager());
-    } else if (m_type == "spike_up") {
-        m_drawableL = std::make_shared<jt::Sprite>(
-            "assets/tileset.png", jt::Recti { 0, 128, 16, 16 }, textureManager());
-        m_drawableM = std::make_shared<jt::Sprite>(
-            "assets/tileset.png", jt::Recti { 16, 128, 16, 16 }, textureManager());
-        m_drawableR = std::make_shared<jt::Sprite>(
-            "assets/tileset.png", jt::Recti { 32, 128, 16, 16 }, textureManager());
-    } else if (m_type == "spike_left") {
-        m_drawableT = std::make_shared<jt::Sprite>(
-            "assets/tileset.png", jt::Recti { 96, 96, 16, 16 }, textureManager());
-        m_drawableM = std::make_shared<jt::Sprite>(
-            "assets/tileset.png", jt::Recti { 96, 112, 16, 16 }, textureManager());
-        m_drawableB = std::make_shared<jt::Sprite>(
-            "assets/tileset.png", jt::Recti { 96, 128, 16, 16 }, textureManager());
-    } else if (m_type == "spike_right") {
-        m_drawableT = std::make_shared<jt::Sprite>(
-            "assets/tileset.png", jt::Recti { 112, 96, 16, 16 }, textureManager());
-        m_drawableM = std::make_shared<jt::Sprite>(
-            "assets/tileset.png", jt::Recti { 112, 112, 16, 16 }, textureManager());
-        m_drawableB = std::make_shared<jt::Sprite>(
-            "assets/tileset.png", jt::Recti { 112, 128, 16, 16 }, textureManager());
-    }
     b2FixtureDef fixtureDef;
     fixtureDef.density = 1.0f;
     fixtureDef.isSensor = true;
@@ -58,8 +29,47 @@ void Killbox::doCreate()
     fixtureDef.shape = &polygonShape;
 
     auto collider = m_physicsObject->getB2Body()->CreateFixture(&fixtureDef);
-    m_physicsObject->setPosition(
-        jt::Vector2f { m_rect.left + m_rect.width / 2, m_rect.top + m_rect.height / 2 });
+
+    if (m_type == "spike_down") {
+        m_drawableL = std::make_shared<jt::Sprite>(
+            "assets/tileset.png", jt::Recti { 48, 144, 16, 16 }, textureManager());
+        m_drawableM = std::make_shared<jt::Sprite>(
+            "assets/tileset.png", jt::Recti { 64, 144, 16, 16 }, textureManager());
+        m_drawableR = std::make_shared<jt::Sprite>(
+            "assets/tileset.png", jt::Recti { 80, 144, 16, 16 }, textureManager());
+
+        m_physicsObject->setPosition(
+            jt::Vector2f { m_rect.left + m_rect.width / 2, m_rect.top + m_rect.height / 2 - 8 });
+
+    } else if (m_type == "spike_up") {
+        m_drawableL = std::make_shared<jt::Sprite>(
+            "assets/tileset.png", jt::Recti { 0, 128, 16, 16 }, textureManager());
+        m_drawableM = std::make_shared<jt::Sprite>(
+            "assets/tileset.png", jt::Recti { 16, 128, 16, 16 }, textureManager());
+        m_drawableR = std::make_shared<jt::Sprite>(
+            "assets/tileset.png", jt::Recti { 32, 128, 16, 16 }, textureManager());
+        m_physicsObject->setPosition(
+            jt::Vector2f { m_rect.left + m_rect.width / 2, m_rect.top + m_rect.height / 2 + 8 });
+    } else if (m_type == "spike_left") {
+        m_drawableT = std::make_shared<jt::Sprite>(
+            "assets/tileset.png", jt::Recti { 96, 96, 16, 16 }, textureManager());
+        m_drawableM = std::make_shared<jt::Sprite>(
+            "assets/tileset.png", jt::Recti { 96, 112, 16, 16 }, textureManager());
+        m_drawableB = std::make_shared<jt::Sprite>(
+            "assets/tileset.png", jt::Recti { 96, 128, 16, 16 }, textureManager());
+        m_physicsObject->setPosition(
+            jt::Vector2f { m_rect.left + m_rect.width / 2 + 8, m_rect.top + m_rect.height / 2 });
+    } else if (m_type == "spike_right") {
+        m_drawableT = std::make_shared<jt::Sprite>(
+            "assets/tileset.png", jt::Recti { 112, 96, 16, 16 }, textureManager());
+        m_drawableM = std::make_shared<jt::Sprite>(
+            "assets/tileset.png", jt::Recti { 112, 112, 16, 16 }, textureManager());
+        m_drawableB = std::make_shared<jt::Sprite>(
+            "assets/tileset.png", jt::Recti { 112, 128, 16, 16 }, textureManager());
+        m_physicsObject->setPosition(
+            jt::Vector2f { m_rect.left + m_rect.width / 2 - 8, m_rect.top + m_rect.height / 2 });
+    }
+
     collider->SetUserData((void*)g_userDataKillboxID);
 }
 
