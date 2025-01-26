@@ -168,6 +168,10 @@ void Player::updateAnimation(float const elapsed)
         m_bubbleVolume -= elapsed * m_velocities.size() * GP::BubbleVolumeLossFactor();
     } else {
         if (m_bubble->getCurrentAnimationName() != "pop") {
+
+            auto snd = getGame()->audio().addTemporarySound("event:/sfx/explode");
+            snd->play();
+
             m_bubble->play("pop");
             m_velocities.clear();
 
