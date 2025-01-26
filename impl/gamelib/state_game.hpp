@@ -21,7 +21,7 @@ public:
 
 private:
     std::shared_ptr<jt::Box2DWorldInterface> m_world { nullptr };
-    std::shared_ptr<jt::ParticleSystem<jt::Animation, 100>> m_particlesBubbleExhaust;
+    std::shared_ptr<jt::ParticleSystem<jt::Animation, 200>> m_particlesBubbleExhaust;
 
     std::string m_levelName { "" };
 
