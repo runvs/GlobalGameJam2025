@@ -28,7 +28,7 @@ void StateMenu::onCreate()
         GP::GetScreenSize(), textureManager()));
 
     try {
-        auto bgm = getGame()->audio().getPermanentSound("music");
+        auto bgm = getGame()->audio().getPermanentSound("bgm");
         if (bgm == nullptr) {
             bgm = getGame()->audio().addPermanentSound("bgm", "event:/music");
             bgm->play();
