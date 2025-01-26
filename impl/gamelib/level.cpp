@@ -255,7 +255,7 @@ void Level::checkIfPlayerIsInPowerup(
 {
     for (auto p : m_powerUps) {
         if (!p->isAlive()) {
-            return;
+            continue;
         }
         p->checkIfPlayerIsInPowerUp(playerPosition, callback);
     }
