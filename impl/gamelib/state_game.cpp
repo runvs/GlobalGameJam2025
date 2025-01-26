@@ -115,7 +115,7 @@ void StateGame::onUpdate(float const elapsed)
         m_level->checkIfPlayerIsInPowerup(
             m_player->getPosition(), [this](ePowerUpType t, PowerUp* pu) {
                 if (pu->getPowerUpType() == ePowerUpType::SOAP) {
-                    m_player->resetBubbleVolume();
+                    m_player->setBubbleVolume(1.0f);
                 } else if (pu->getPowerUpType() == ePowerUpType::PATCH) {
                     m_player->addPatches();
                     m_hud->addPatches(
@@ -167,6 +167,14 @@ void StateGame::handleCheatModeActivation(float const elapsed)
     if (input.keyboard()->justPressed(jt::KeyCode::F8)) {
         m_cheatsActive = !m_cheatsActive;
         std::cerr << "cheats " << (m_cheatsActive ? "on" : "off") << std::endl;
+        if (m_cheatsActive) {
+            std::cerr << "\t(J) jump to mouse position" << std::endl;
+            std::cerr << "\t(P) add patches" << std::endl;
+            std::cerr << "\t(O) patch all holes" << std::endl;
+            std::cerr << "\t(B) smallest bubble" << std::endl;
+            std::cerr << "\t(N) half bubble" << std::endl;
+            std::cerr << "\t(M) full bubble" << std::endl;
+        }
     }
 }
 
@@ -179,19 +187,40 @@ void StateGame::handleCheats(float const elapsed)
     auto const& mouse = getGame()->input().mouse();
 
     if (keyboard->justPressed(jt::KeyCode::J)) {
-        std::cerr << "cheats: J" << std::endl;
+        std::cerr << "cheat (J) jump to mouse position" << std::endl;
         auto const worldPos = mouse->getMousePositionWorld();
-        m_player->setVelocity({ 0.0f, 0.0f });
+        m_player->resetVelocity();
         m_player->setPosition(worldPos);
     }
 
     if (keyboard->justPressed(jt::KeyCode::P)) {
+        std::cerr << "cheat (P) add patches" << std::endl;
         m_player->addPatches();
         m_hud->addPatches(GP::NumberOfPatchesPerPowerUp(), [this](std::shared_ptr<jt::Sprite> p) {
             add(jt::TweenAlpha::create(p, 0.4, 0, 255));
             add(jt::TweenScale::create(
                 p, 0.4, jt::Vector2f { 1.5f, 1.5f }, jt::Vector2f { 1.0f, 1.0f }));
         });
+    }
+
+    if (keyboard->justPressed(jt::KeyCode::O)) {
+        std::cerr << "cheat (O) patch all holes" << std::endl;
+        m_player->resetPuncturePoints();
+    }
+
+    if (keyboard->justPressed(jt::KeyCode::B)) {
+        std::cerr << "cheat (B) smallest bubble" << std::endl;
+        m_player->setBubbleVolume(0.0f);
+    }
+
+    if (keyboard->justPressed(jt::KeyCode::N)) {
+        std::cerr << "cheat (N) half bubble" << std::endl;
+        m_player->setBubbleVolume(0.5f);
+    }
+
+    if (keyboard->justPressed(jt::KeyCode::M)) {
+        std::cerr << "cheat (M) full bubble" << std::endl;
+        m_player->setBubbleVolume(1.0f);
     }
 }
 
