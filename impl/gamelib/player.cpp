@@ -75,11 +75,11 @@ void Player::doUpdate(float const elapsed)
     fixtureDef.isSensor = true;
     b2PolygonShape polygonShape;
 
-    if (m_velocities.empty()) {
+    if (m_puncturePoints.empty()) {
         m_bubbleSounds->setVolume(0.0f);
         m_bubbleSoundsStrong->setVolume(0.0f);
     } else {
-        float const v = std::clamp(static_cast<float>(m_velocities.size()) / 10.0f, 0.0f, 1.0f);
+        float const v = std::clamp(static_cast<float>(m_puncturePoints.size()) / 10.0f, 0.0f, 1.0f);
 
         m_bubbleSounds->setVolume(1.0f - v);
         m_bubbleSoundsStrong->setVolume(v);
@@ -98,7 +98,7 @@ void Player::doUpdate(float const elapsed)
     if (++m_particleFrameCount >= 30) {
         m_particleFrameCount = 0;
 
-        for (auto const& v : m_velocities) {
+        for (auto const& v : m_puncturePoints) {
             auto const position = (m_animation->getPosition() - v * 16.0f);
             m_exhaustParticleSystem.lock()->fire(1, position);
         }
@@ -165,7 +165,7 @@ void Player::updateAnimation(float const elapsed)
     if (isInBubble()) {
         int const index = std::clamp(static_cast<int>(m_bubbleVolume * 7), 0, 6);
         m_bubble->play("b" + std::to_string(index));
-        m_bubbleVolume -= elapsed * m_velocities.size() * GP::BubbleVolumeLossFactor();
+        m_bubbleVolume -= elapsed * m_puncturePoints.size() * GP::BubbleVolumeLossFactor();
     } else {
         m_flashOutsideBubbleTimer -= elapsed;
 
@@ -186,7 +186,7 @@ void Player::updateAnimation(float const elapsed)
 
             m_bubble->play("pop");
             m_animation->play("fall_start");
-            m_velocities.clear();
+            m_puncturePoints.clear();
 
             for (int i = 0; i < 16; ++i) {
                 auto position
@@ -219,7 +219,7 @@ void Player::handleMovement(float const elapsed)
             if (m_punctureTimer <= 0) {
                 if (gp->justPressed(jt::GamepadButtonCode::GBA)) {
                     m_punctureTimer = GP::PlayerInputPunctureDeadTime();
-                    m_velocities.push_back(-1.0f * m_indicatorVec);
+                    m_puncturePoints.push_back(-1.0f * m_indicatorVec);
                     m_hasStabbed = true;
                     m_bubble->flash(0.3f, jt::ColorFactory::fromHexString("#d59f63"));
                     auto snd = getGame()->audio().addTemporarySound("event:/sfx/poke");
@@ -227,14 +227,14 @@ void Player::handleMovement(float const elapsed)
                 }
 
                 if (gp->justPressed(jt::GamepadButtonCode::GBB)) {
-                    if (!m_velocities.empty()) {
+                    if (!m_puncturePoints.empty()) {
                         if (m_patchesAvailable > 0) {
 
                             auto controllerVec = -1.0f * m_indicatorVec;
 
                             bool anyPatched = false;
                             std::erase_if(
-                                m_velocities, [controllerVec, &anyPatched](auto const& v) {
+                                m_puncturePoints, [controllerVec, &anyPatched](auto const& v) {
                                     auto dist = jt::MathHelper::length(controllerVec - v);
 
                                     bool patchedThis = dist < 0.25f;
@@ -261,7 +261,7 @@ void Player::handleMovement(float const elapsed)
         m_indicator->setPosition(m_animation->getPosition() + axis * 16.0f);
 
         jt::Vector2f resultingForce { 0.0f, 0.0f };
-        for (auto const& v : m_velocities) {
+        for (auto const& v : m_puncturePoints) {
             resultingForce += v * GP::PlayerBlowoutForceFactor();
         }
 
@@ -300,7 +300,7 @@ void Player::doDraw() const
     m_bubble->draw(renderTarget());
 
     if (isInBubble()) {
-        for (auto const& v : m_velocities) {
+        for (auto const& v : m_puncturePoints) {
             m_punctureIndicator->setPosition(m_animation->getPosition() - v * 16.0f);
             m_punctureIndicator->update(0.0f);
             m_punctureIndicator->draw(renderTarget());
@@ -326,7 +326,7 @@ void Player::setLevelSize(jt::Vector2f const& levelSizeInTiles)
 
 bool Player::isInBubble() const { return m_bubbleVolume >= 0.0f; }
 
-void Player::resetBubbleVolume() { m_bubbleVolume = 1.0f; }
+void Player::setBubbleVolume(float volume) { m_bubbleVolume = volume; }
 
 void Player::addPatches()
 {
@@ -343,3 +343,5 @@ void Player::setPatchUsedCallback(std::function<void()> const& callback)
 {
     m_patchUsedCallback = callback;
 }
+
+void Player::resetPuncturePoints() { m_puncturePoints.clear(); }

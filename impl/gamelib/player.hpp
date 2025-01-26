@@ -31,11 +31,12 @@ public:
 
     bool isInBubble() const;
 
-    void resetBubbleVolume();
+    void setBubbleVolume(float volume);
 
     void addPatches();
     void setAvailablePatches(int numberOfAvailablePatches);
     void setPatchUsedCallback(std::function<void()> const& callback);
+    void resetPuncturePoints();
 
 private:
     std::shared_ptr<jt::Animation> m_animation;
@@ -65,7 +66,7 @@ private:
 
     jt::Vector2f m_indicatorVec;
     float m_punctureTimer { 0.0f };
-    std::vector<jt::Vector2f> m_velocities;
+    std::vector<jt::Vector2f> m_puncturePoints;
     bool m_hasStabbed { false };
     float m_stabbedCooldown { 0.2f };
 

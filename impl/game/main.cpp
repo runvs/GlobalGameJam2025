@@ -98,6 +98,10 @@ int main(int /*argc*/, char* /*argv*/[])
     keyboard->listenForKey(jt::KeyCode::F8);
     keyboard->listenForKey(jt::KeyCode::J);
     keyboard->listenForKey(jt::KeyCode::P);
+    keyboard->listenForKey(jt::KeyCode::O);
+    keyboard->listenForKey(jt::KeyCode::B);
+    keyboard->listenForKey(jt::KeyCode::N);
+    keyboard->listenForKey(jt::KeyCode::M);
 
     auto const gamepad0 = std::make_shared<jt::GamepadInput>(0);
     auto const gamepad1 = std::make_shared<jt::GamepadInput>(1);
