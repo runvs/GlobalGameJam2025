@@ -17,7 +17,7 @@
 
 class StateGame : public jt::GameState {
 public:
-    explicit StateGame(std::string const& levelName = "level_01.json");
+    explicit StateGame(std::string const& levelName = "level_09.json");
 
 private:
     std::shared_ptr<jt::Box2DWorldInterface> m_world { nullptr };
