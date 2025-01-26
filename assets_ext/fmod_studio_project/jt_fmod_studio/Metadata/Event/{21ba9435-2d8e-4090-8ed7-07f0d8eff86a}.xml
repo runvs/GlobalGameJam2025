@@ -127,33 +127,5 @@
 		<property name="nameOfPropertyBeingAutomated">
 			<value>volume</value>
 		</property>
-		<relationship name="automationCurves">
-			<destination>{e057c0c4-b985-4282-a4a5-7fabda660f0e}</destination>
-		</relationship>
-	</object>
-	<object class="AutomationCurve" id="{e057c0c4-b985-4282-a4a5-7fabda660f0e}">
-		<relationship name="parameter">
-			<destination>{3fc9f924-ab17-44cf-a0cf-36b7c672d330}</destination>
-		</relationship>
-		<relationship name="automationPoints">
-			<destination>{e2dc634a-5990-4d2d-bf01-0de5c240fbeb}</destination>
-			<destination>{f2d5e0f0-8d21-4005-844c-2650895f3024}</destination>
-		</relationship>
-	</object>
-	<object class="AutomationPoint" id="{e2dc634a-5990-4d2d-bf01-0de5c240fbeb}">
-		<property name="position">
-			<value>0</value>
-		</property>
-		<property name="value">
-			<value>-80</value>
-		</property>
-	</object>
-	<object class="AutomationPoint" id="{f2d5e0f0-8d21-4005-844c-2650895f3024}">
-		<property name="position">
-			<value>1</value>
-		</property>
-		<property name="value">
-			<value>0</value>
-		</property>
 	</object>
 </objects>

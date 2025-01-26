@@ -87,12 +87,13 @@ void Player::doUpdate(float const elapsed)
 
     if (m_puncturePoints.empty()) {
         m_bubbleSounds->setVolume(0.0f);
+
         m_bubbleSoundsStrong->setVolume(0.0f);
     } else {
         float const v = std::clamp(static_cast<float>(m_puncturePoints.size()) / 10.0f, 0.0f, 1.0f);
 
-        m_bubbleSounds->setVolume(1.0f - v);
-        m_bubbleSoundsStrong->setVolume(v);
+        m_bubbleSounds->setVolume(0.7f * (1.0f - v));
+        m_bubbleSoundsStrong->setVolume(0.7f * v);
     }
 
     updateAnimation(elapsed);
@@ -252,9 +253,13 @@ void Player::handleMovement(float const elapsed)
                                 auto snd = getGame()->audio().addTemporarySound("event:/sfx/patch");
                                 snd->play();
                                 if (m_patchUsedCallback) {
+
                                     m_patchUsedCallback();
                                 }
                             }
+                        } else {
+                            auto snd = getGame()->audio().addTemporarySound("event:/sfx/error");
+                            snd->play();
                         }
                     }
                 }
