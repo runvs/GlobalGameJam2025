@@ -79,7 +79,7 @@ void Player::doUpdate(float const elapsed)
     fixtureDef.isSensor = true;
     b2CircleShape circleShape {};
 
-    circleShape.m_radius = m_bubbleVolume * 24.0f * 0.9f;
+    circleShape.m_radius = (8.0f + m_bubbleVolume * (24.0f - 8.0f)) * 0.9f;
     fixtureDef.shape = &circleShape;
     m_bubbleSensorFixture = m_physicsObject->getB2Body()->CreateFixture(&fixtureDef);
 
