@@ -64,7 +64,6 @@ void StateMenu::createShapes()
     auto c = m_background->getColor();
     c.a = 50;
     m_background->setColor(c);
-    m_background->setCamMovementFactor(0.3f);
 }
 
 void StateMenu::createMenuText()
@@ -79,7 +78,7 @@ void StateMenu::createTextExplanation() { }
 
 void StateMenu::createTextCredits()
 {
-    m_textVersion = jt::dh::createText(renderTarget(), "", 14u, GP::PaletteFontCredits());
+    m_textVersion = jt::dh::createText(renderTarget(), "", 14u, jt::colors::White);
     m_textVersion->setCamMovementFactor(0.0f);
     if (jt::BuildInfo::gitTagName() != "") {
         m_textVersion->setText(jt::BuildInfo::gitTagName());
@@ -89,7 +88,7 @@ void StateMenu::createTextCredits()
     }
     m_textVersion->setTextAlign(jt::Text::TextAlign::RIGHT);
     m_textVersion->setPosition({ GP::GetScreenSize().x - 5.0f, GP::GetScreenSize().y - 20.0f });
-    m_textVersion->setShadow(GP::PaletteFontShadow(), jt::Vector2f { 1, 1 });
+    m_textVersion->setShadow(jt::colors::Gray, jt::Vector2f { 1, 1 });
 }
 
 void StateMenu::createTextStart() { }
@@ -124,7 +123,7 @@ void StateMenu::createTweenCreditsPosition() { }
 
 void StateMenu::onUpdate(float const elapsed)
 {
-    getGame()->gfx().camera().move(jt::Vector2f { 8.0f, 16.0f } * elapsed);
+    getGame()->gfx().camera().move(jt::Vector2f { 2.0f, 3.0f } * elapsed);
     updateDrawables(elapsed);
     checkForTransitionToStateGame();
 }
