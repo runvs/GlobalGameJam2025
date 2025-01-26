@@ -328,7 +328,11 @@ bool Player::isInBubble() const { return m_bubbleVolume >= 0.0f; }
 
 void Player::resetBubbleVolume() { m_bubbleVolume = 1.0f; }
 
-void Player::addPatches() { m_patchesAvailable += 2; }
+void Player::addPatches()
+{
+    m_patchesAvailable += GP::NumberOfPatchesPerPowerUp();
+    m_patchesAvailable = std::clamp(m_patchesAvailable, 0, 20);
+}
 
 void Player::setAvailablePatches(int numberOfAvailablePatches)
 {

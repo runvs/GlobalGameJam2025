@@ -51,6 +51,7 @@ public:
     static float PlayerWithoutBubbleOrMovementDeathTimer();
     static int GamepadIndex();
     static float BubbleVolumeLossFactor();
+    static int NumberOfPatchesPerPowerUp();
 };
 
 #endif

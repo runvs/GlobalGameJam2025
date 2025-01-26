@@ -110,7 +110,12 @@ void StateGame::onUpdate(float const elapsed)
                     m_player->resetBubbleVolume();
                 } else if (pu->getPowerUpType() == ePowerUpType::PATCH) {
                     m_player->addPatches();
-                    m_hud->addPatches(5, [](auto sprte) { });
+                    m_hud->addPatches(
+                        GP::NumberOfPatchesPerPowerUp(), [this](std::shared_ptr<jt::Sprite> p) {
+                            add(jt::TweenAlpha::create(p, 0.4, 0, 255));
+                            add(jt::TweenScale::create(
+                                p, 0.4, jt::Vector2f { 1.5f, 1.5f }, jt::Vector2f { 1.0f, 1.0f }));
+                        });
                 }
 
                 add(jt::TweenScale::create(

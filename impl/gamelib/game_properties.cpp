@@ -48,3 +48,5 @@ float GP::PlayerWithoutBubbleOrMovementDeathTimer() { return 4.0f; }
 int GP::GamepadIndex() { return 0; }
 
 float GP::BubbleVolumeLossFactor() { return 0.0125f; }
+
+int GP::NumberOfPatchesPerPowerUp() { return 3; }
