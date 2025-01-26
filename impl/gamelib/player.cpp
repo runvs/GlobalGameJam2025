@@ -1,5 +1,6 @@
 #include "player.hpp"
 
+#include "color/color_factory.hpp"
 #include "drawable_helpers.hpp"
 #include "game_properties.hpp"
 #include <conversions.hpp>
@@ -185,9 +186,8 @@ void Player::handleMovement(float const elapsed)
     m_punctureTimer -= elapsed;
 
     if (isInBubble()) {
+
         m_indicatorVec = jt::Vector2f { 0.0f, 0.0f };
-        auto const playerHalfSize = jt::Vector2f { m_animation->getLocalBounds().width / 2,
-            m_animation->getLocalBounds().height / 2 };
         auto gp = getGame()->input().gamepad(GP::GamepadIndex());
         auto axis = gp->getAxis(jt::GamepadAxisCode::ALeft);
         float const l = jt::MathHelper::length(axis);
@@ -200,6 +200,7 @@ void Player::handleMovement(float const elapsed)
                     m_punctureTimer = GP::PlayerInputPunctureDeadTime();
                     m_velocities.push_back(-1.0f * m_indicatorVec);
                     m_hasStabbed = true;
+                    m_bubble->flash(0.3f, jt::ColorFactory::fromHexString("#d59f63"));
                 }
 
                 if (gp->justPressed(jt::GamepadButtonCode::GBB)) {
@@ -207,6 +208,7 @@ void Player::handleMovement(float const elapsed)
                         m_patchesAvailable -= 1;
                         m_punctureTimer = GP::PlayerInputPunctureDeadTime();
                         auto controllerVec = -1.0f * m_indicatorVec;
+                        m_bubble->flash(0.3f, jt::ColorFactory::fromHexString("#00f595"));
 
                         std::erase_if(m_velocities, [controllerVec](auto const& v) {
                             auto dist = jt::MathHelper::length(controllerVec - v);
