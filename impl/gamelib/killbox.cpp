@@ -1,14 +1,22 @@
 #include "killbox.hpp"
 #include "game_properties.hpp"
+#include "user_data_entries.hpp"
 #include <game_interface.hpp>
 #include <math_helper.hpp>
 #include <sprite.hpp>
 
-Killbox::Killbox(jt::Rectf const& rect, std::string const& name, std::string const& type)
+Killbox::Killbox(jt::Rectf const& rect, std::string const& name, std::string const& type,
+    std::weak_ptr<jt::Box2DWorldInterface> world)
     : m_rect { rect }
     , m_name { name }
     , m_type { type }
+    , m_world { world }
 {
+
+    b2BodyDef bodyDef;
+    bodyDef.fixedRotation = true;
+    bodyDef.type = b2_kinematicBody;
+    m_physicsObject = std::make_shared<jt::Box2DObject>(m_world.lock(), &bodyDef);
 }
 
 void Killbox::doCreate()
@@ -42,6 +50,17 @@ void Killbox::doCreate()
         m_drawableB = std::make_shared<jt::Sprite>(
             "assets/tileset.png", jt::Recti { 112, 128, 16, 16 }, textureManager());
     }
+    b2FixtureDef fixtureDef;
+    fixtureDef.density = 1.0f;
+    fixtureDef.isSensor = true;
+    b2PolygonShape polygonShape {};
+    polygonShape.SetAsBox(m_rect.width / 2, m_rect.height / 2);
+    fixtureDef.shape = &polygonShape;
+
+    auto collider = m_physicsObject->getB2Body()->CreateFixture(&fixtureDef);
+    m_physicsObject->setPosition(
+        jt::Vector2f { m_rect.left + m_rect.width / 2, m_rect.top + m_rect.height / 2 });
+    collider->SetUserData((void*)g_userDataKillboxID);
 }
 
 void Killbox::doUpdate(float const elapsed)

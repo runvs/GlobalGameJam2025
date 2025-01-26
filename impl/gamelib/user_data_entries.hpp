@@ -4,7 +4,7 @@
 #include <cstdint>
 
 constexpr std::uint64_t g_userDataPlayerID { 10u };
-constexpr std::uint64_t g_userDataPlayerFeetID { 20u };
-constexpr std::uint64_t g_userDataEnemyID { 30u };
+constexpr std::uint64_t g_userDataPlayerBubbleID { 20u };
+constexpr std::uint64_t g_userDataKillboxID { 30u };
 
 #endif // JAMTEMPLATE_USER_DATA_ENTRIES_HPP

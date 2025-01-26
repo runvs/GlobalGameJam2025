@@ -22,8 +22,8 @@ private:
     /// Called when two fixtures cease to touch.
     void onEndContact(b2Contact* contact) override;
 
-    bool isPlayerFixture(b2Fixture* fa) const;
-    bool isEnemyFixture(b2Fixture* fa) const;
+    bool isBubbleFixture(b2Fixture* fa) const;
+    bool isKillboxFixture(b2Fixture* fa) const;
 };
 
 #endif // JAMTEMPLATE_CONTACT_CALLBACK_PLAYER_ENEMY_HPP

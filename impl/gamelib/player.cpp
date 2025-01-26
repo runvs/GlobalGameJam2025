@@ -81,11 +81,11 @@ void Player::doUpdate(float const elapsed)
     fixtureDef.isSensor = true;
     b2CircleShape circleShape {};
 
-    circleShape.m_radius = m_bubbleVolume * 24.0f;
+    circleShape.m_radius = m_bubbleVolume * 24.0f * 0.9f;
     fixtureDef.shape = &circleShape;
     m_bubbleSensorFixture = m_physicsObject->getB2Body()->CreateFixture(&fixtureDef);
 
-    m_bubbleSensorFixture->SetUserData((void*)(g_userDataPlayerFeetID));
+    m_bubbleSensorFixture->SetUserData((void*)(g_userDataPlayerBubbleID));
 
     if (m_puncturePoints.empty()) {
         m_bubbleSounds->setVolume(0.0f);

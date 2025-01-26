@@ -20,22 +20,24 @@ void ContactCallbackPlayerEnemy::onBeginContact(b2Contact* contact)
     auto const fa = contact->GetFixtureA();
     auto const fb = contact->GetFixtureB();
 
-    bool optionA = isPlayerFixture(fa) && isEnemyFixture(fb);
-    bool optionB = isPlayerFixture(fb) && isEnemyFixture(fa);
+    bool optionA = isBubbleFixture(fa) && isKillboxFixture(fb);
+    bool optionB = isBubbleFixture(fb) && isKillboxFixture(fa);
 
-    // TODO kill
+    if (optionA || optionB) {
+        p->setBubbleVolume(-1.0f);
+    }
 }
 
 void ContactCallbackPlayerEnemy::onEndContact(b2Contact* /*contact*/) { }
 
-bool ContactCallbackPlayerEnemy::isPlayerFixture(b2Fixture* fa) const
+bool ContactCallbackPlayerEnemy::isBubbleFixture(b2Fixture* fa) const
 {
     void* fixtureUserData = fa->GetUserData();
-    return (std::uint64_t)fixtureUserData == g_userDataPlayerID;
+    return (std::uint64_t)fixtureUserData == g_userDataPlayerBubbleID;
 }
 
-bool ContactCallbackPlayerEnemy::isEnemyFixture(b2Fixture* fa) const
+bool ContactCallbackPlayerEnemy::isKillboxFixture(b2Fixture* fa) const
 {
     void* fixtureUserData = fa->GetUserData();
-    return (std::uint64_t)fixtureUserData == g_userDataEnemyID;
+    return (std::uint64_t)fixtureUserData == g_userDataKillboxID;
 }

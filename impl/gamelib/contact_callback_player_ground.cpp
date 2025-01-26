@@ -35,7 +35,7 @@ void ContactCallbackPlayerGround::setPlayer(std::weak_ptr<Player> player) { m_pl
 bool ContactCallbackPlayerGround::isPlayerFeetFixture(b2Fixture* fa) const
 {
     void* fixtureUserData = fa->GetUserData();
-    return (std::uint64_t)fixtureUserData == g_userDataPlayerFeetID;
+    return (std::uint64_t)fixtureUserData == g_userDataPlayerBubbleID;
 }
 
 void ContactCallbackPlayerGround::setEnabled(bool enabled) { m_enabled = enabled; }
