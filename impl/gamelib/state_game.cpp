@@ -60,6 +60,11 @@ void StateGame::onCreate()
     playerEnemyContactListener->setPlayer(m_player);
     m_world->getContactManager().registerCallback("player_enemy1", playerEnemyContactListener);
 
+    auto color = jt::colors::Black;
+    color.a = 0;
+    m_overlay = jt::dh::createShapeRect(GP::GetScreenSize(), color, textureManager());
+    m_overlay->setIgnoreCamMovement(true);
+
     m_vignette = std::make_shared<jt::Vignette>(GP::GetScreenSize());
     add(m_vignette);
 
@@ -77,6 +82,8 @@ void StateGame::loadLevel()
 
 void StateGame::onUpdate(float const elapsed)
 {
+    m_overlay->update(elapsed);
+
     handleReturnToMainMenu(elapsed);
 
     m_hud->update(elapsed);
@@ -144,7 +151,12 @@ void StateGame::endGame()
 {
     if (!m_ending) {
         m_ending = true;
-        getGame()->stateManager().switchState(std::make_shared<StateGame>(m_levelName));
+        auto const tween
+            = jt::TweenAlpha::create(m_overlay, 1.0f, std::uint8_t { 0 }, std::uint8_t { 255 });
+        tween->addCompleteCallback([this]() {
+            getGame()->stateManager().switchState(std::make_shared<StateGame>(m_levelName));
+        });
+        add(tween);
     }
 }
 
@@ -265,11 +277,12 @@ void StateGame::onDraw() const
     m_particlesBubbleExhaust->draw();
     m_vignette->draw();
     m_hud->draw();
+    m_overlay->draw(renderTarget());
 }
 
 void StateGame::createPlayer()
 {
-    m_player = std::make_shared<Player>(m_world, m_particlesBubbleExhaust, m_levelName);
+    m_player = std::make_shared<Player>(m_world, m_particlesBubbleExhaust);
     m_player->setPosition(m_level->getPlayerStart());
     m_player->setLevelSize(m_level->getLevelSizeInPixel());
     m_player->setAvailablePatches(m_level->getNumberOfInitiallyAvailablePatches());

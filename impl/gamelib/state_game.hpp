@@ -29,6 +29,7 @@ private:
 
     std::shared_ptr<Level> m_level { nullptr };
     std::shared_ptr<Player> m_player { nullptr };
+    std::shared_ptr<jt::Shape> m_overlay { nullptr };
     std::shared_ptr<jt::Vignette> m_vignette { nullptr };
 
     bool m_cheatsActive { false };

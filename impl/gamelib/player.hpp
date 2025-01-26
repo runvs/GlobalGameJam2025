@@ -14,8 +14,7 @@ class Player : public jt::GameObject {
 public:
     using Sptr = std::shared_ptr<Player>;
     Player(std::shared_ptr<jt::Box2DWorldInterface> world,
-        std::weak_ptr<jt::ParticleSystem<jt::Animation, 100>> exhaustParticleSFstem,
-        std::string const& currentLevelName);
+        std::weak_ptr<jt::ParticleSystem<jt::Animation, 100>> exhaustParticleSFstem);
 
     ~Player() override;
 
@@ -59,7 +58,6 @@ private:
     float m_timeWithoutBubbleOrMovement = 0.0f;
 
     jt::Vector2f m_levelSizeInTiles { 0.0f, 0.0f };
-    std::string const& m_currentLevelName;
 
     float m_soundTimerWalk { 0.0f };
     float m_soundTimerJump { 0.0f };

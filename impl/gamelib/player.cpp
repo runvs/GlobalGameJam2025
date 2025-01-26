@@ -11,10 +11,8 @@
 #include <user_data_entries.hpp>
 
 Player::Player(std::shared_ptr<jt::Box2DWorldInterface> world,
-    std::weak_ptr<jt::ParticleSystem<jt::Animation, 100>> exhaustParticleSFstem,
-    std::string const& currentLevelName)
+    std::weak_ptr<jt::ParticleSystem<jt::Animation, 100>> exhaustParticleSFstem)
     : m_exhaustParticleSystem { exhaustParticleSFstem }
-    , m_currentLevelName { currentLevelName }
 {
     b2BodyDef bodyDef;
     bodyDef.fixedRotation = true;
@@ -292,8 +290,7 @@ void Player::handleOutsideBubbleWithoutMovement(float const elapsed)
     m_timeWithoutBubbleOrMovement += elapsed;
 
     if (m_timeWithoutBubbleOrMovement >= GP::PlayerWithoutBubbleOrMovementDeathTimer()) {
-        // he's dead, Jim
-        getGame()->stateManager().switchState(std::make_shared<StateGame>(m_currentLevelName));
+        kill();
     }
 }
 
