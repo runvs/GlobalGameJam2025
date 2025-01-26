@@ -2,7 +2,6 @@
 #define JAMTEMPLATE_SCREEN_WRAP_HPP
 
 #include <graphics/drawable_interface.hpp>
-#include <memory>
 
 namespace jt {
 

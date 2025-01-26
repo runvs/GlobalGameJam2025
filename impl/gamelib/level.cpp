@@ -20,14 +20,12 @@ void Level::doCreate()
     m_flatColorBackground->makeRect(GP::GetScreenSize(), textureManager());
 
     m_flatColorBackground->setCamMovementFactor(0.0f);
+    m_background = std::make_shared<jt::Sprite>("assets/background.aseprite", textureManager());
 
-    m_background = std::make_shared<jt::Animation>();
-    m_background->loadFromAseprite("assets/background.aseprite", textureManager());
-    m_background->play("idle");
     auto c = m_background->getColor();
     c.a = 50;
     m_background->setColor(c);
-    m_background->setCamMovementFactor(0.0f);
+    m_background->setCamMovementFactor(0.3f);
 
     jt::tilemap::TilesonLoader loader { getGame()->cache().getTilemapCache(), m_fileName };
 
@@ -207,7 +205,16 @@ void Level::doUpdate(float const elapsed)
 void Level::doDraw() const
 {
     m_flatColorBackground->draw(renderTarget());
-    m_background->draw(renderTarget());
+    float const w = m_background->getLocalBounds().width;
+    float const h = m_background->getLocalBounds().height;
+    for (auto i = -2; i != 3; ++i) {
+        for (auto j = -2; j != 3; ++j) {
+            m_background->setPosition(jt::Vector2f { i * w, j * h });
+            m_background->update(0.0f);
+            m_background->draw(renderTarget());
+        }
+    }
+
     m_tileLayerGround->draw(renderTarget());
 
     for (auto const& exit : m_exits) {

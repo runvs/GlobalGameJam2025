@@ -1,5 +1,4 @@
 #include "screen_wrap.hpp"
-#include <iostream>
 
 void jt::wrapOnScreen(jt::DrawableInterface& drawable, float margin)
 {
