@@ -68,12 +68,12 @@ private:
 
     void doCreate() override;
 
-    void doUpdate(float const elapsed) override;
+    void doUpdate(float elapsed) override;
     void doDraw() const override;
 
-    void handleCheats(float const elapsed);
-    void handleMovement(float const elapsed);
-    void handleOutsideBubbleWithoutMovement(float const);
+    void handleCheats(float elapsed);
+    void handleMovement(float elapsed);
+    void handleOutsideBubbleWithoutMovement(float);
     void updateAnimation(float elapsed);
     void clampPositionToLevelSize(jt::Vector2f& currentPosition) const;
     bool m_horizontalMovement { false };
