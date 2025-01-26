@@ -184,17 +184,17 @@
                         {
                          "name":"bg_b",
                          "type":"int",
-                         "value":150
+                         "value":75
                         }, 
                         {
                          "name":"bg_g",
                          "type":"int",
-                         "value":150
+                         "value":75
                         }, 
                         {
                          "name":"bg_r",
                          "type":"int",
-                         "value":150
+                         "value":75
                         }, 
                         {
                          "name":"era",
@@ -727,6 +727,15 @@
                         }]
                 }, 
                 {
+                 "id":63,
+                 "properties":[
+                        {
+                         "name":"blocked",
+                         "type":"bool",
+                         "value":true
+                        }]
+                }, 
+                {
                  "id":64,
                  "properties":[
                         {
@@ -772,6 +781,15 @@
                         }]
                 }, 
                 {
+                 "id":73,
+                 "properties":[
+                        {
+                         "name":"blocked",
+                         "type":"bool",
+                         "value":true
+                        }]
+                }, 
+                {
                  "id":74,
                  "properties":[
                         {
@@ -782,6 +800,15 @@
                 }, 
                 {
                  "id":75,
+                 "properties":[
+                        {
+                         "name":"blocked",
+                         "type":"bool",
+                         "value":true
+                        }]
+                }, 
+                {
+                 "id":83,
                  "properties":[
                         {
                          "name":"blocked",
