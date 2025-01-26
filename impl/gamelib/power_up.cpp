@@ -19,9 +19,9 @@ void PowerUp::doCreate()
         m_type = ePowerUpType::PATCH;
     }
 
-    m_animation->setOffset(jt::OffsetMode::TOPLEFT);
+    m_animation->setOffset(jt::OffsetMode::CENTER);
 
-    m_animation->setPosition(m_info.position);
+    m_animation->setPosition(m_info.position + m_info.size * 0.5);
 }
 
 void PowerUp::doUpdate(float const elapsed) { m_animation->update(elapsed); }
