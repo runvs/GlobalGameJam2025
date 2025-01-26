@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objects serializationModel="Studio.02.02.00">
-	<object class="AudioFile" id="{5fb705c6-6f19-49e1-81ca-5df6f9cb3dd3}">
+	<object class="AudioFile" id="{14ca87c6-d748-4f22-8d7c-863ff941c2a4}">
 		<property name="assetPath">
-			<value>test/unit/jt_test/test.ogg</value>
+			<value>sfx/bubbles_short0.wav</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>44.0999985</value>
@@ -11,7 +11,7 @@
 			<value>1</value>
 		</property>
 		<property name="length">
-			<value>0.26272108843537417</value>
+			<value>0.97920634920634919</value>
 		</property>
 		<relationship name="masterAssetFolder">
 			<destination>{cae7f441-fb69-4865-8745-bd7dd48b1565}</destination>

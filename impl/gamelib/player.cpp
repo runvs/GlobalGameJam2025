@@ -23,6 +23,16 @@ Player::Player(std::shared_ptr<jt::Box2DWorldInterface> world,
     m_physicsObject = std::make_shared<jt::Box2DObject>(world, &bodyDef);
 }
 
+Player::~Player()
+{
+    if (m_bubbleSounds) {
+        m_bubbleSounds->stop();
+    }
+    if (m_bubbleSoundsStrong) {
+        m_bubbleSoundsStrong->stop();
+    }
+}
+
 void Player::doCreate()
 {
     m_animation = std::make_shared<jt::Animation>();
@@ -50,6 +60,11 @@ void Player::doCreate()
     fixtureDef.shape = &circleCollider;
     auto playerCollider = m_physicsObject->getB2Body()->CreateFixture(&fixtureDef);
     playerCollider->SetUserData((void*)(g_userDataPlayerID));
+
+    m_bubbleSounds = getGame()->audio().addTemporarySound("event:/sfx/bubbles");
+    m_bubbleSounds->setVolume(0.0f);
+    m_bubbleSoundsStrong = getGame()->audio().addTemporarySound("event:/sfx/bubbles _strong");
+    m_bubbleSounds->setVolume(0.0f);
 }
 
 std::shared_ptr<jt::Animation> Player::getAnimation() { return m_animation; }
@@ -59,6 +74,16 @@ void Player::doUpdate(float const elapsed)
     b2FixtureDef fixtureDef;
     fixtureDef.isSensor = true;
     b2PolygonShape polygonShape;
+
+    if (m_velocities.empty()) {
+        m_bubbleSounds->setVolume(0.0f);
+        m_bubbleSoundsStrong->setVolume(0.0f);
+    } else {
+        float const v = std::clamp(static_cast<float>(m_velocities.size()) / 10.0f, 0.0f, 1.0f);
+
+        m_bubbleSounds->setVolume(1.0f - v);
+        m_bubbleSoundsStrong->setVolume(v);
+    }
 
     auto const rotDeg = -90;
     auto const halfAxis = jt::MathHelper::rotateBy(jt::Vector2f { 3.0f, 0.2f }, rotDeg);
