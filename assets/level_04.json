@@ -238,7 +238,7 @@
                         {
                          "name":"initial_patches",
                          "type":"int",
-                         "value":10
+                         "value":7
                         }],
                  "rotation":0,
                  "type":"",
