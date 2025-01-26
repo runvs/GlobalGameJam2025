@@ -13,8 +13,7 @@ void PowerUp::doCreate()
         m_animation->play("idle");
         m_type = ePowerUpType::SOAP;
     } else if (type == "patch") {
-        // TODO load patch icon
-        m_animation->loadFromAseprite("assets/soap.aseprite", textureManager());
+        m_animation->loadFromAseprite("assets/patch.aseprite", textureManager());
         m_animation->play("idle");
         m_type = ePowerUpType::PATCH;
     }
