@@ -123,6 +123,23 @@
                  "width":16,
                  "x":224,
                  "y":272
+                }, 
+                {
+                 "height":16,
+                 "id":440,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"patch"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":160,
+                 "y":32
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -254,7 +271,7 @@
          "y":0
         }],
  "nextlayerid":12,
- "nextobjectid":440,
+ "nextobjectid":441,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.1",
