@@ -213,17 +213,17 @@
                         {
                          "name":"bg_b",
                          "type":"int",
-                         "value":150
+                         "value":90
                         }, 
                         {
                          "name":"bg_g",
                          "type":"int",
-                         "value":150
+                         "value":40
                         }, 
                         {
                          "name":"bg_r",
                          "type":"int",
-                         "value":150
+                         "value":40
                         }, 
                         {
                          "name":"era",

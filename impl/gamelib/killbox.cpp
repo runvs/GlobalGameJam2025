@@ -113,15 +113,15 @@ void Killbox::checkIfPlayerIsInKillbox(
     for (auto const& positionToCheck : {
              // clang-format off
     playerPosition,
-    playerPosition + jt::Vector2f{GP::PlayerSize().x *0.0f, GP::PlayerSize().y *0.25f},
-    playerPosition + jt::Vector2f{GP::PlayerSize().x *0.0f, -GP::PlayerSize().y *0.25f},
-    playerPosition + jt::Vector2f{GP::PlayerSize().x *0.25f, GP::PlayerSize().y *0.0f},
-    playerPosition + jt::Vector2f{-GP::PlayerSize().x *0.25f, -GP::PlayerSize().y *0.0f},
+    playerPosition + jt::Vector2f{GP::PlayerSize().x *0.0f, GP::PlayerSize().y *0.35f},
+    playerPosition + jt::Vector2f{GP::PlayerSize().x *0.0f, -GP::PlayerSize().y *0.35f},
+    playerPosition + jt::Vector2f{GP::PlayerSize().x *0.35f, GP::PlayerSize().y *0.0f},
+    playerPosition + jt::Vector2f{-GP::PlayerSize().x *0.35f, -GP::PlayerSize().y *0.0f},
 
-    playerPosition + jt::Vector2f{GP::PlayerSize().x *0.25f, GP::PlayerSize().y *0.25f},
-    playerPosition + jt::Vector2f{GP::PlayerSize().x *0.25f, -GP::PlayerSize().y *0.25f},
-    playerPosition + jt::Vector2f{-GP::PlayerSize().x *0.25f, GP::PlayerSize().y *0.25f},
-    playerPosition + jt::Vector2f{-GP::PlayerSize().x *02.5f, -GP::PlayerSize().y *0.25f}
+    playerPosition + jt::Vector2f{GP::PlayerSize().x *0.35f, GP::PlayerSize().y *0.35f},
+    playerPosition + jt::Vector2f{GP::PlayerSize().x *0.35f, -GP::PlayerSize().y *0.35f},
+    playerPosition + jt::Vector2f{-GP::PlayerSize().x *0.35f, GP::PlayerSize().y *0.35f},
+    playerPosition + jt::Vector2f{-GP::PlayerSize().x *0.35f, -GP::PlayerSize().y *0.35f}
              // clang-format on
          }) {
         if (jt::MathHelper::checkIsIn(m_rect, positionToCheck)) {
