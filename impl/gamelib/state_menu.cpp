@@ -52,9 +52,19 @@ void StateMenu::createVignette()
 
 void StateMenu::createShapes()
 {
-    m_background
-        = jt::dh::createShapeRect(GP::GetScreenSize(), GP::PaletteBackground(), textureManager());
+    m_backgroundFlat
+        = jt::dh::createShapeRect(GP::GetScreenSize(), jt::colors::Black, textureManager());
+    m_backgroundFlat->setCamMovementFactor(0.0f);
+    m_logo = std::make_shared<jt::Sprite>("assets/menu.aseprite", textureManager());
+    m_logo->setCamMovementFactor(0.0f);
     m_overlay = jt::dh::createShapeRect(GP::GetScreenSize(), jt::colors::Black, textureManager());
+    m_overlay->setCamMovementFactor(0.0f);
+    m_background = std::make_shared<jt::Sprite>("assets/background.aseprite", textureManager());
+
+    auto c = m_background->getColor();
+    c.a = 50;
+    m_background->setColor(c);
+    m_background->setCamMovementFactor(0.3f);
 }
 
 void StateMenu::createMenuText()
@@ -65,26 +75,12 @@ void StateMenu::createMenuText()
     createTextCredits();
 }
 
-void StateMenu::createTextExplanation()
-{
-    m_textExplanation
-        = jt::dh::createText(renderTarget(), GP::ExplanationText(), 16u, GP::PaletteFontFront());
-    auto const half_width = GP::GetScreenSize().x / 2.0f;
-    m_textExplanation->setPosition({ half_width, 100 });
-    m_textExplanation->setShadow(GP::PaletteFontShadow(), jt::Vector2f { 2, 2 });
-}
+void StateMenu::createTextExplanation() { }
 
 void StateMenu::createTextCredits()
 {
-    m_textCredits = jt::dh::createText(renderTarget(),
-        "Created by " + GP::AuthorName() + " for " + GP::JamName() + "\n" + GP::JamDate()
-            + "\nF9 for License Information",
-        14u, GP::PaletteFontCredits());
-    m_textCredits->setTextAlign(jt::Text::TextAlign::LEFT);
-    m_textCredits->setPosition({ 10, GP::GetScreenSize().y - 70 });
-    m_textCredits->setShadow(GP::PaletteFontShadow(), jt::Vector2f { 1, 1 });
-
     m_textVersion = jt::dh::createText(renderTarget(), "", 14u, GP::PaletteFontCredits());
+    m_textVersion->setCamMovementFactor(0.0f);
     if (jt::BuildInfo::gitTagName() != "") {
         m_textVersion->setText(jt::BuildInfo::gitTagName());
     } else {
@@ -96,22 +92,9 @@ void StateMenu::createTextCredits()
     m_textVersion->setShadow(GP::PaletteFontShadow(), jt::Vector2f { 1, 1 });
 }
 
-void StateMenu::createTextStart()
-{
-    auto const half_width = GP::GetScreenSize().x / 2.0f;
-    m_textStart = jt::dh::createText(
-        renderTarget(), "Press Space to start the game", 16u, GP::PaletteFontFront());
-    m_textStart->setPosition({ half_width, 70 });
-    m_textStart->setShadow(GP::PaletteFontShadow(), jt::Vector2f { 2, 2 });
-}
+void StateMenu::createTextStart() { }
 
-void StateMenu::createTextTitle()
-{
-    float half_width = GP::GetScreenSize().x / 2;
-    m_textTitle = jt::dh::createText(renderTarget(), GP::GameName(), 32u, GP::PaletteFontFront());
-    m_textTitle->setPosition({ half_width, 10 });
-    m_textTitle->setShadow(GP::PaletteFontShadow(), jt::Vector2f { 3, 3 });
-}
+void StateMenu::createTextTitle() { }
 
 void StateMenu::createTweens()
 {
@@ -121,47 +104,13 @@ void StateMenu::createTweens()
     createTweenExplanation();
 }
 
-void StateMenu::createInstructionTweenColor1()
-{
-    auto const tc = jt::TweenColor::create(
-        m_textStart, 0.5f, GP::PaletteFontFront(), GP::PalleteFrontHighlight());
-    tc->addCompleteCallback([this]() { createInstructionTweenColor2(); });
-    tc->setAgePercentConversion(
-        [](float age) { return jt::Lerp::cubic(0.0f, 1.0f, std::clamp(age, 0.0f, 1.0f)); });
-    add(tc);
-}
+void StateMenu::createInstructionTweenColor1() { }
 
-void StateMenu::createInstructionTweenColor2()
-{
-    auto const tc = jt::TweenColor::create(
-        m_textStart, 0.45f, GP::PalleteFrontHighlight(), GP::PaletteFontFront());
-    tc->setAgePercentConversion(
-        [](float age) { return jt::Lerp::cubic(0.0f, 1.0f, std::clamp(age, 0.0f, 1.0f)); });
-    tc->setStartDelay(0.2f);
-    tc->addCompleteCallback([this]() { createInstructionTweenColor1(); });
-    add(tc);
-}
+void StateMenu::createInstructionTweenColor2() { }
 
-void StateMenu::createTweenExplanation()
-{
-    auto const start = m_textStart->getPosition() + jt::Vector2f { -1000, 0 };
-    auto const end = m_textStart->getPosition();
+void StateMenu::createTweenExplanation() { }
 
-    auto const tween = jt::TweenPosition::create(m_textStart, 0.5f, start, end);
-    tween->setStartDelay(0.3f);
-    tween->setSkipTicks();
-
-    tween->addCompleteCallback([this]() { createInstructionTweenColor1(); });
-    add(tween);
-}
-
-void StateMenu::createTweenTitleAlpha()
-{
-    auto const tween = jt::TweenAlpha::create(m_textTitle, 0.55f, 0, 255);
-    tween->setStartDelay(0.2f);
-    tween->setSkipTicks();
-    add(tween);
-}
+void StateMenu::createTweenTitleAlpha() { }
 
 void StateMenu::createTweenOverlayAlpha()
 {
@@ -171,39 +120,21 @@ void StateMenu::createTweenOverlayAlpha()
     add(tween);
 }
 
-void StateMenu::createTweenCreditsPosition()
-{
-    auto const creditsPositionStart = m_textCredits->getPosition() + jt::Vector2f { 0, 150 };
-    auto const creditsPositionEnd = m_textCredits->getPosition();
-
-    auto const tweenCredits
-        = jt::TweenPosition::create(m_textCredits, 0.75f, creditsPositionStart, creditsPositionEnd);
-    tweenCredits->setStartDelay(0.8f);
-    tweenCredits->setSkipTicks();
-    add(tweenCredits);
-
-    auto const versionPositionStart = m_textVersion->getPosition() + jt::Vector2f { 0, 150 };
-    auto const versionPositionEnd = m_textVersion->getPosition();
-    auto const tweenVersion
-        = jt::TweenPosition::create(m_textVersion, 0.75f, versionPositionStart, versionPositionEnd);
-    tweenVersion->setStartDelay(0.8f);
-    tweenVersion->setSkipTicks();
-    add(tweenVersion);
-}
+void StateMenu::createTweenCreditsPosition() { }
 
 void StateMenu::onUpdate(float const elapsed)
 {
+    getGame()->gfx().camera().move(jt::Vector2f { 8.0f, 16.0f } * elapsed);
     updateDrawables(elapsed);
     checkForTransitionToStateGame();
 }
 
 void StateMenu::updateDrawables(float const& elapsed)
 {
+    m_backgroundFlat->update(elapsed);
     m_background->update(elapsed);
-    m_textTitle->update(elapsed);
-    m_textStart->update(elapsed);
-    m_textExplanation->update(elapsed);
-    m_textCredits->update(elapsed);
+    m_logo->update(elapsed);
+
     m_textVersion->update(elapsed);
     m_overlay->update(elapsed);
     m_vignette->update(elapsed);
@@ -240,13 +171,22 @@ void StateMenu::startTransitionToStateGame()
 
 void StateMenu::onDraw() const
 {
-    m_background->draw(renderTarget());
+    m_backgroundFlat->draw(renderTarget());
 
-    m_textTitle->draw(renderTarget());
-    m_textStart->draw(renderTarget());
-    m_textExplanation->draw(renderTarget());
-    m_textCredits->draw(renderTarget());
+    float const w = m_background->getLocalBounds().width;
+    float const h = m_background->getLocalBounds().height;
+    for (auto i = -70; i != 70; ++i) {
+        for (auto j = -70; j != 70; ++j) {
+            m_background->setPosition(jt::Vector2f { i * w, j * h });
+            m_background->update(0.0f);
+            m_background->draw(renderTarget());
+        }
+    }
+
+    m_logo->draw(renderTarget());
+
     m_textVersion->draw(renderTarget());
+
     m_overlay->draw(renderTarget());
     m_vignette->draw();
 }
