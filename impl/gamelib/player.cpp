@@ -248,6 +248,9 @@ void Player::handleMovement(float const elapsed)
                                 m_patchesAvailable -= 1;
                                 m_punctureTimer = GP::PlayerInputPunctureDeadTime();
                                 m_bubble->flash(0.3f, jt::ColorFactory::fromHexString("#00f595"));
+                                if (m_patchUsedCallback) {
+                                    m_patchUsedCallback();
+                                }
                             }
                         }
                     }
@@ -330,4 +333,9 @@ void Player::addPatches() { m_patchesAvailable += 2; }
 void Player::setAvailablePatches(int numberOfAvailablePatches)
 {
     m_patchesAvailable = numberOfAvailablePatches;
+}
+
+void Player::setPatchUsedCallback(std::function<void()> const& callback)
+{
+    m_patchUsedCallback = callback;
 }

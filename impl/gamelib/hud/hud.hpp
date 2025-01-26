@@ -2,23 +2,22 @@
 #define GAME_HUD_HPP
 
 #include <game_object.hpp>
-#include <hud/observer_interface.hpp>
 #include <sprite.hpp>
-#include <text.hpp>
+#include <functional>
+#include <memory>
 
 class ScoreDisplay;
 
 class Hud : public jt::GameObject {
 public:
-    std::shared_ptr<ObserverInterface<int>> getObserverScoreP1() const;
-    std::shared_ptr<ObserverInterface<int>> getObserverScoreP2() const;
+    void setPatches(int p);
+    void addPatches(int p, std::function<void(std::shared_ptr<jt::Sprite>)> const& cb);
+    void removePatch(std::function<void(std::shared_ptr<jt::Sprite>)> const&);
 
 private:
-    std::shared_ptr<ScoreDisplay> m_scoreP1Display;
-    std::shared_ptr<ScoreDisplay> m_scoreP2Display;
+    int m_numberOfAvailablePatches;
 
-    jt::Text::Sptr m_scoreP1Text;
-    jt::Text::Sptr m_scoreP2Text;
+    std::vector<std::shared_ptr<jt::Sprite>> m_patches;
 
     void doCreate() override;
 

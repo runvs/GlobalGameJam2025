@@ -23,6 +23,8 @@ void StateGame::onCreate()
     m_world
         = std::make_shared<jt::Box2DWorldImpl>(jt::Vector2f { 0.0f, 0.0f }, loggingContactManager);
 
+    m_hud = std::make_shared<Hud>();
+    add(m_hud);
     loadLevel();
 
     m_particlesBubbleExhaust = jt::ParticleSystem<jt::Animation, 100>::createPS(
@@ -60,6 +62,7 @@ void StateGame::onCreate()
 
     m_vignette = std::make_shared<jt::Vignette>(GP::GetScreenSize());
     add(m_vignette);
+
     setAutoDraw(false);
 }
 
@@ -69,10 +72,12 @@ void StateGame::loadLevel()
 {
     m_level = std::make_shared<Level>("assets/" + m_levelName, m_world);
     add(m_level);
+    m_hud->setPatches(m_level->getNumberOfInitiallyAvailablePatches());
 }
 
 void StateGame::onUpdate(float const elapsed)
 {
+    m_hud->update(elapsed);
     if (!m_ending && !getGame()->stateManager().getTransition()->isInProgress()) {
         m_world->step(elapsed, GP::PhysicVelocityIterations(), GP::PhysicPositionIterations());
 
@@ -105,6 +110,7 @@ void StateGame::onUpdate(float const elapsed)
                     m_player->resetBubbleVolume();
                 } else if (pu->getPowerUpType() == ePowerUpType::PATCH) {
                     m_player->addPatches();
+                    m_hud->addPatches(5, [](auto sprte) { });
                 }
 
                 add(jt::TweenScale::create(
@@ -119,9 +125,9 @@ void StateGame::onUpdate(float const elapsed)
     if (getGame()->input().keyboard()->justPressed(jt::KeyCode::F1)
         || getGame()->input().keyboard()->justPressed(jt::KeyCode::Escape)
         || getGame()
-               ->input()
-               .gamepad(GP::GamepadIndex())
-               ->justPressed(jt::GamepadButtonCode::GBBack)) {
+            ->input()
+            .gamepad(GP::GamepadIndex())
+            ->justPressed(jt::GamepadButtonCode::GBBack)) {
         getGame()->stateManager().switchState(std::make_shared<StateMenu>());
     }
 }
@@ -174,6 +180,7 @@ void StateGame::onDraw() const
     m_player->draw();
     m_particlesBubbleExhaust->draw();
     m_vignette->draw();
+    m_hud->draw();
 }
 
 void StateGame::createPlayer()
@@ -185,6 +192,10 @@ void StateGame::createPlayer()
     add(m_player);
 
     getGame()->gfx().camera().setCamOffset(m_level->getPlayerStart() - GP::GetScreenSize() * 0.5f);
+    m_player->setPatchUsedCallback([this]() {
+        m_hud->removePatch(
+            [this](std::shared_ptr<jt::Sprite> p) { p->setColor(jt::Color { 255, 255, 255, 0 }); });
+    });
 }
 
 std::string StateGame::getName() const { return "Game"; }

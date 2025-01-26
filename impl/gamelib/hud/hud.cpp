@@ -5,36 +5,58 @@
 #include <game_properties.hpp>
 #include <hud/score_display.hpp>
 
-std::shared_ptr<ObserverInterface<int>> Hud::getObserverScoreP1() const { return m_scoreP1Display; }
+void Hud::setPatches(int p)
+{
+    m_numberOfAvailablePatches = p - 1;
+    m_numberOfAvailablePatches
+        = std::clamp(m_numberOfAvailablePatches, 0, static_cast<int>(m_patches.size()) - 1);
+    for (auto i = 0; i < m_patches.size(); i++) {
+        bool visible = i <= m_numberOfAvailablePatches;
+        m_patches[i]->setColor(jt::Color { 255, 255, 255, std::uint8_t(visible ? 255u : 0u) });
+    }
+}
 
-std::shared_ptr<ObserverInterface<int>> Hud::getObserverScoreP2() const { return m_scoreP2Display; }
+void Hud::addPatches(int p, std::function<void(std::shared_ptr<jt::Sprite>)> const& cb)
+{
+    for (int i = 0; i != p; ++i) {
+        m_numberOfAvailablePatches += 1;
+        if (m_numberOfAvailablePatches < m_patches.size()) {
+            cb(m_patches[m_numberOfAvailablePatches]);
+        }
+    }
+}
+
+void Hud::removePatch(std::function<void(std::shared_ptr<jt::Sprite>)> const& cb)
+{
+    cb(m_patches.at(m_numberOfAvailablePatches));
+    m_numberOfAvailablePatches -= 1;
+    m_numberOfAvailablePatches
+        = std::clamp(m_numberOfAvailablePatches, 0, static_cast<int>(m_patches.size()) - 1);
+}
 
 void Hud::doCreate()
 {
-    m_scoreP1Text = std::make_shared<jt::Text>();
-    m_scoreP1Text = jt::dh::createText(renderTarget(), "", 16, jt::Color { 248, 249, 254 });
-    m_scoreP1Text->setTextAlign(jt::Text::TextAlign::LEFT);
-    m_scoreP1Text->setIgnoreCamMovement(true);
-    m_scoreP1Text->setPosition({ 10, 4 });
-
-    m_scoreP1Display = std::make_shared<ScoreDisplay>(m_scoreP1Text, "P1 Score: ");
-
-    m_scoreP2Text = jt::dh::createText(renderTarget(), "", 16, jt::Color { 248, 249, 254 });
-    m_scoreP2Text->setTextAlign(jt::Text::TextAlign::RIGHT);
-    m_scoreP2Text->setIgnoreCamMovement(true);
-    m_scoreP2Text->setPosition({ GP::GetScreenSize().x - 10, 4 });
-
-    m_scoreP2Display = std::make_shared<ScoreDisplay>(m_scoreP2Text, "P2 Score: ");
+    for (auto i = 0; i != 20; ++i) {
+        auto sprite = std::make_shared<jt::Sprite>(
+            "assets/patch.aseprite", jt::Recti { 0, 0, 16, 16 }, textureManager());
+        float const x = (i % 10) * 12;
+        float const y = (i / 10) * 16;
+        sprite->setPosition({ x, y });
+        sprite->setIgnoreCamMovement(true);
+        m_patches.push_back(sprite);
+    }
 }
 
 void Hud::doUpdate(float const elapsed)
 {
-    m_scoreP1Text->update(elapsed);
-    m_scoreP2Text->update(elapsed);
+    for (auto& p : m_patches) {
+        p->update(elapsed);
+    }
 }
 
 void Hud::doDraw() const
 {
-    m_scoreP1Text->draw(renderTarget());
-    m_scoreP2Text->draw(renderTarget());
+    for (auto& p : m_patches) {
+        p->draw(renderTarget());
+    }
 }

@@ -36,6 +36,7 @@ public:
 
     void addPatches();
     void setAvailablePatches(int numberOfAvailablePatches);
+    void setPatchUsedCallback(std::function<void()> const& callback);
 
 private:
     std::shared_ptr<jt::Animation> m_animation;
@@ -83,6 +84,8 @@ private:
 
     std::shared_ptr<jt::SoundInterface> m_bubbleSounds;
     std::shared_ptr<jt::SoundInterface> m_bubbleSoundsStrong;
+
+    std::function<void()> m_patchUsedCallback;
 };
 
 #endif // JAMTEMPLATE_DEMO_PLATFORM_PLAYER

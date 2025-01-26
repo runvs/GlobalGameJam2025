@@ -1,6 +1,7 @@
 ﻿#ifndef STATE_GAME
 #define STATE_GAME
 
+#include "hud/hud.hpp"
 #include <box2dwrapper/box2d_object.hpp>
 #include <box2dwrapper/box2d_world_interface.hpp>
 #include <contact_callback_player_enemy.hpp>
@@ -23,6 +24,8 @@ private:
     std::shared_ptr<jt::ParticleSystem<jt::Animation, 100>> m_particlesBubbleExhaust;
 
     std::string m_levelName { "" };
+
+    std::shared_ptr<Hud> m_hud { nullptr };
 
     std::shared_ptr<Level> m_level { nullptr };
     std::shared_ptr<Player> m_player { nullptr };
