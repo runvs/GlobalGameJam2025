@@ -167,12 +167,25 @@ void Player::updateAnimation(float const elapsed)
         m_bubble->play("b" + std::to_string(index));
         m_bubbleVolume -= elapsed * m_velocities.size() * GP::BubbleVolumeLossFactor();
     } else {
+        m_flashOutsideBubbleTimer -= elapsed;
+
+        if (m_flashOutsideBubbleTimer <= 0) {
+            m_flashOutsideBubbleTimer = 0.5f;
+            m_animation->flash(0.4f, jt::colors::Red);
+        }
+        if (m_timeSinceFallStart <= 0.3) {
+            m_timeSinceFallStart += elapsed;
+            if (m_timeSinceFallStart >= 0.3) {
+                m_animation->play("fall", 0, false);
+            }
+        }
         if (m_bubble->getCurrentAnimationName() != "pop") {
 
             auto snd = getGame()->audio().addTemporarySound("event:/sfx/explode");
             snd->play();
 
             m_bubble->play("pop");
+            m_animation->play("fall_start");
             m_velocities.clear();
 
             for (int i = 0; i < 16; ++i) {

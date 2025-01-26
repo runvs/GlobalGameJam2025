@@ -20,6 +20,7 @@ public:
         jt::Vector2f const& playerPosition, std::function<void(ePowerUpType, PowerUp*)> callback);
 
     [[nodiscard]] ePowerUpType getPowerUpType() const;
+
     std::shared_ptr<jt::DrawableInterface> getDrawable();
 
     bool m_pickedUp { false };

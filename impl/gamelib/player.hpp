@@ -62,6 +62,8 @@ private:
 
     float m_soundTimerWalk { 0.0f };
     float m_soundTimerJump { 0.0f };
+    float m_timeSinceFallStart { 0.0f };
+    float m_flashOutsideBubbleTimer { 0.0f };
 
     jt::Vector2f m_indicatorVec;
     float m_punctureTimer { 0.0f };
