@@ -131,9 +131,6 @@
 		<property name="nameOfPropertyBeingAutomated">
 			<value>volume</value>
 		</property>
-		<relationship name="automationCurves">
-			<destination>{0401a9d7-008c-4c49-a1a4-d880c5ce052a}</destination>
-		</relationship>
 	</object>
 	<object class="SingleSound" id="{7a6b83e7-0b9e-4603-a9e4-a9750b7181cb}">
 		<relationship name="audioFile">
@@ -144,39 +141,5 @@
 		<relationship name="audioFile">
 			<destination>{2a3ae6f9-4a2c-4848-aa2e-0a39b42b310a}</destination>
 		</relationship>
-	</object>
-	<object class="AutomationCurve" id="{0401a9d7-008c-4c49-a1a4-d880c5ce052a}">
-		<relationship name="parameter">
-			<destination>{3fc9f924-ab17-44cf-a0cf-36b7c672d330}</destination>
-		</relationship>
-		<relationship name="automationPoints">
-			<destination>{4c886f3d-8f80-4337-938b-edbb26bfa9bb}</destination>
-			<destination>{6b185539-e72e-48c3-ae4c-91c7438e5472}</destination>
-			<destination>{9f96611d-76bc-4b98-a497-e1b7a00931af}</destination>
-		</relationship>
-	</object>
-	<object class="AutomationPoint" id="{4c886f3d-8f80-4337-938b-edbb26bfa9bb}">
-		<property name="position">
-			<value>0.012711864406779662</value>
-		</property>
-		<property name="value">
-			<value>0</value>
-		</property>
-	</object>
-	<object class="AutomationPoint" id="{6b185539-e72e-48c3-ae4c-91c7438e5472}">
-		<property name="position">
-			<value>1</value>
-		</property>
-		<property name="value">
-			<value>-80</value>
-		</property>
-	</object>
-	<object class="AutomationPoint" id="{9f96611d-76bc-4b98-a497-e1b7a00931af}">
-		<property name="position">
-			<value>0.60000000000000009</value>
-		</property>
-		<property name="value">
-			<value>-15</value>
-		</property>
 	</object>
 </objects>

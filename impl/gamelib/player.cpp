@@ -226,6 +226,8 @@ void Player::handleMovement(float const elapsed)
                     m_velocities.push_back(-1.0f * m_indicatorVec);
                     m_hasStabbed = true;
                     m_bubble->flash(0.3f, jt::ColorFactory::fromHexString("#d59f63"));
+                    auto snd = getGame()->audio().addTemporarySound("event:/sfx/poke");
+                    snd->play();
                 }
 
                 if (gp->justPressed(jt::GamepadButtonCode::GBB)) {
@@ -248,6 +250,8 @@ void Player::handleMovement(float const elapsed)
                                 m_patchesAvailable -= 1;
                                 m_punctureTimer = GP::PlayerInputPunctureDeadTime();
                                 m_bubble->flash(0.3f, jt::ColorFactory::fromHexString("#00f595"));
+                                auto snd = getGame()->audio().addTemporarySound("event:/sfx/patch");
+                                snd->play();
                                 if (m_patchUsedCallback) {
                                     m_patchUsedCallback();
                                 }

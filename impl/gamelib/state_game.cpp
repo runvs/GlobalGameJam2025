@@ -90,6 +90,9 @@ void StateGame::onUpdate(float const elapsed)
             m_player->getPosition(), [this](std::string const& newLevelName) {
                 if (!m_ending) {
                     m_ending = true;
+                    auto snd = getGame()->audio().addTemporarySound("event:/sfx/goal");
+                    snd->play();
+
                     getGame()->stateManager().switchState(
                         std::make_shared<StateGame>(newLevelName));
                 }
@@ -117,6 +120,9 @@ void StateGame::onUpdate(float const elapsed)
                                 p, 0.4, jt::Vector2f { 1.5f, 1.5f }, jt::Vector2f { 1.0f, 1.0f }));
                         });
                 }
+
+                auto snd = getGame()->audio().addTemporarySound("event:/sfx/pickup");
+                snd->play();
 
                 add(jt::TweenScale::create(
                     pu->getDrawable(), 0.5f, jt::Vector2f { 1.0f, 1.0f }, { 2.0f, 2.0f }));
