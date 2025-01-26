@@ -169,13 +169,23 @@ void StateGame::handleCheats(float const elapsed)
     if (!m_cheatsActive)
         return;
 
-    auto& input = getGame()->input();
+    auto const& keyboard = getGame()->input().keyboard();
+    auto const& mouse = getGame()->input().mouse();
 
-    if (input.keyboard()->justPressed(jt::KeyCode::J)) {
+    if (keyboard->justPressed(jt::KeyCode::J)) {
         std::cerr << "cheats: J" << std::endl;
-        auto const worldPos = input.mouse()->getMousePositionWorld();
+        auto const worldPos = mouse->getMousePositionWorld();
         m_player->setVelocity({ 0.0f, 0.0f });
         m_player->setPosition(worldPos);
+    }
+
+    if (keyboard->justPressed(jt::KeyCode::P)) {
+        m_player->addPatches();
+        m_hud->addPatches(GP::NumberOfPatchesPerPowerUp(), [this](std::shared_ptr<jt::Sprite> p) {
+            add(jt::TweenAlpha::create(p, 0.4, 0, 255));
+            add(jt::TweenScale::create(
+                p, 0.4, jt::Vector2f { 1.5f, 1.5f }, jt::Vector2f { 1.0f, 1.0f }));
+        });
     }
 }
 
