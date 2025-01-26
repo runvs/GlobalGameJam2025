@@ -52,6 +52,10 @@ void StateGame::onCreate()
     add(m_particlesBubbleExhaust);
 
     createPlayer();
+
+    getGame()->gfx().camera().setCamOffset(m_player->getPosition() - GP::GetScreenSize() * 0.5f);
+    clampCameraToScreen();
+
     auto const playerGroundContactListener = std::make_shared<ContactCallbackPlayerGround>();
     playerGroundContactListener->setPlayer(m_player);
     m_world->getContactManager().registerCallback("player_ground0", playerGroundContactListener);
@@ -73,11 +77,43 @@ void StateGame::onCreate()
 
 void StateGame::onEnter() { }
 
+void StateGame::clampCameraToScreen()
+{
+    auto& cam = getGame()->gfx().camera();
+
+    auto const screenWidth = GP::GetScreenSize().x;
+    auto const screenHeight = GP::GetScreenSize().y;
+
+    // clamp camera to level bounds
+    auto offset = cam.getCamOffset();
+    if (offset.x < 0) {
+        offset.x = 0;
+    }
+    if (offset.y < 0) {
+        offset.y = 0;
+    }
+
+    auto const levelWidth = m_level->getLevelSizeInPixel().x;
+    auto const levelHeight = m_level->getLevelSizeInPixel().y;
+    auto const maxCamPositionX = levelWidth - screenWidth;
+
+    auto const maxCamPositionY = levelHeight - screenHeight;
+    if (offset.x > maxCamPositionX) {
+        offset.x = maxCamPositionX;
+    }
+    if (offset.y > maxCamPositionY) {
+        offset.y = maxCamPositionY;
+    }
+    cam.setCamOffset(offset);
+}
+
 void StateGame::loadLevel()
 {
     m_level = std::make_shared<Level>("assets/" + m_levelName, m_world);
     add(m_level);
     m_hud->setPatches(m_level->getNumberOfInitiallyAvailablePatches());
+
+    clampCameraToScreen();
 }
 
 void StateGame::onUpdate(float const elapsed)
@@ -161,9 +197,9 @@ void StateGame::handleReturnToMainMenu(float const elapsed)
     if (getGame()->input().keyboard()->justPressed(jt::KeyCode::F1)
         || getGame()->input().keyboard()->justPressed(jt::KeyCode::Escape)
         || getGame()
-               ->input()
-               .gamepad(GP::GamepadIndex())
-               ->justPressed(jt::GamepadButtonCode::GBBack)) {
+            ->input()
+            .gamepad(GP::GamepadIndex())
+            ->justPressed(jt::GamepadButtonCode::GBBack)) {
         getGame()->stateManager().switchState(std::make_shared<StateMenu>());
     }
 }
@@ -242,27 +278,7 @@ void StateGame::handleCameraScrolling(float const elapsed)
 
     cam.setCamOffset(m_player->getPosition() - jt::Vector2f { screenWidth / 2, screenHeight / 2 });
 
-    // clamp camera to level bounds
-    auto offset = cam.getCamOffset();
-    if (offset.x < 0) {
-        offset.x = 0;
-    }
-    if (offset.y < 0) {
-        offset.y = 0;
-    }
-
-    auto const levelWidth = m_level->getLevelSizeInPixel().x;
-    auto const levelHeight = m_level->getLevelSizeInPixel().y;
-    auto const maxCamPositionX = levelWidth - screenWidth;
-
-    auto const maxCamPositionY = levelHeight - screenHeight;
-    if (offset.x > maxCamPositionX) {
-        offset.x = maxCamPositionX;
-    }
-    if (offset.y > maxCamPositionY) {
-        offset.y = maxCamPositionY;
-    }
-    cam.setCamOffset(offset);
+    clampCameraToScreen();
 }
 
 void StateGame::onDraw() const

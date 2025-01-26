@@ -205,7 +205,6 @@ void Player::updateAnimation(float const elapsed)
     m_bubble->update(elapsed);
     auto const v = static_cast<std::uint8_t>(
         255 * std::clamp(sin(getAge() * 8.0f) * sin(getAge() * 8.0f), 0.0f, 1.0f));
-    // std::cout << static_cast<int>(v) << "\n";
     m_indicator->setColor(jt::Color { v, v, v, 255 });
     m_indicator->update(elapsed);
 }

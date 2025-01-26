@@ -39,6 +39,7 @@ private:
 
     void onCreate() override;
     void onEnter() override;
+    void clampCameraToScreen();
     void onUpdate(float const /*elapsed*/) override;
     void onDraw() const override;
 
