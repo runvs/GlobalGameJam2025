@@ -27,7 +27,7 @@ void StateGame::onCreate()
     add(m_hud);
     loadLevel();
 
-    m_particlesBubbleExhaust = jt::ParticleSystem<jt::Animation, 100>::createPS(
+    m_particlesBubbleExhaust = jt::ParticleSystem<jt::Animation, 200>::createPS(
         [this]() {
             auto a = std::make_shared<jt::Animation>();
             a->loadFromAseprite("assets/particles.aseprite", textureManager());

@@ -25,6 +25,9 @@ void Hud::addPatches(int p, std::function<void(std::shared_ptr<jt::Sprite>)> con
             cb(m_patches[m_numberOfAvailablePatches]);
         }
     }
+
+    m_numberOfAvailablePatches
+        = std::clamp(m_numberOfAvailablePatches, 0, static_cast<int>(m_patches.size()) - 1);
 }
 
 void Hud::removePatch(std::function<void(std::shared_ptr<jt::Sprite>)> const& cb)

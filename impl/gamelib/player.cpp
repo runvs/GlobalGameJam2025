@@ -11,7 +11,7 @@
 #include <user_data_entries.hpp>
 
 Player::Player(std::shared_ptr<jt::Box2DWorldInterface> world,
-    std::weak_ptr<jt::ParticleSystem<jt::Animation, 100>> exhaustParticleSFstem)
+    std::weak_ptr<jt::ParticleSystem<jt::Animation, 200>> exhaustParticleSFstem)
     : m_exhaustParticleSystem { exhaustParticleSFstem }
 {
     b2BodyDef bodyDef;
@@ -99,8 +99,9 @@ void Player::doUpdate(float const elapsed)
     updateAnimation(elapsed);
     handleMovement(elapsed);
 
-    if (++m_particleFrameCount >= 30) {
-        m_particleFrameCount = 0;
+    m_particleFrameCount--;
+    if (m_particleFrameCount <= 0) {
+        m_particleFrameCount = jt::Random::getInt(10, 30);
 
         for (auto const& v : m_puncturePoints) {
             auto const position = (m_animation->getPosition() - v * 16.0f);
