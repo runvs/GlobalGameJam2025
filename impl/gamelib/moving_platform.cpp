@@ -140,13 +140,18 @@ void MovingPlatform::doDraw() const
             m_spriteL->update(0.0f);
             m_spriteL->draw(renderTarget());
 
-            auto numberOfMiddlePartsX = std::max(0, static_cast<int>(m_platformSize.x) / 16 - 2);
+            auto numberOfPartsX = static_cast<int>(m_platformSize.x) / 16;
+            auto numberOfMiddlePartsX = std::max(0, numberOfPartsX - 2);
 
             for (int i = 0; i != numberOfMiddlePartsX; ++i) {
                 m_spriteM->setPosition(
                     m_physicsObject->getPosition() + jt::Vector2f { (i + 1) * 16.0f, j * 16.0f });
                 m_spriteM->update(0.0f);
                 m_spriteM->draw(renderTarget());
+            }
+
+            if (numberOfPartsX <= 1) {
+                break;
             }
             m_spriteR->setPosition(
                 m_physicsObject->getPosition() + jt::Vector2f { m_platformSize.x - 16, j * 16.0f });
@@ -161,13 +166,17 @@ void MovingPlatform::doDraw() const
             m_spriteT->update(0.0f);
             m_spriteT->draw(renderTarget());
 
-            auto numberOfMiddlePartsY = std::max(0, static_cast<int>(m_platformSize.y) / 16 - 2);
+            auto numberOfPartsY = static_cast<int>(m_platformSize.y) / 16;
+            auto numberOfMiddlePartsY = std::max(0, static_cast<int>(numberOfPartsY - 2));
 
             for (int j = 0; j != numberOfMiddlePartsY; ++j) {
                 m_spriteM->setPosition(
                     m_physicsObject->getPosition() + jt::Vector2f { i * 16.0f, (j + 1) * 16.0f });
                 m_spriteM->update(0.0f);
                 m_spriteM->draw(renderTarget());
+            }
+            if (numberOfPartsY <= 1) {
+                break;
             }
             m_spriteB->setPosition(
                 m_physicsObject->getPosition() + jt::Vector2f { i * 16.0f, m_platformSize.y - 16 });
