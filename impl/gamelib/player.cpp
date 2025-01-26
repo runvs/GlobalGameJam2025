@@ -229,16 +229,18 @@ void Player::handleMovement(float const elapsed)
                 }
 
                 if (gp->justPressed(jt::GamepadButtonCode::GBB)) {
-                    if (m_patchesAvailable > 0) {
-                        m_patchesAvailable -= 1;
-                        m_punctureTimer = GP::PlayerInputPunctureDeadTime();
-                        auto controllerVec = -1.0f * m_indicatorVec;
-                        m_bubble->flash(0.3f, jt::ColorFactory::fromHexString("#00f595"));
+                    if (!m_velocities.empty()) {
+                        if (m_patchesAvailable > 0) {
+                            m_patchesAvailable -= 1;
+                            m_punctureTimer = GP::PlayerInputPunctureDeadTime();
+                            auto controllerVec = -1.0f * m_indicatorVec;
+                            m_bubble->flash(0.3f, jt::ColorFactory::fromHexString("#00f595"));
 
-                        std::erase_if(m_velocities, [controllerVec](auto const& v) {
-                            auto dist = jt::MathHelper::length(controllerVec - v);
-                            return dist < 0.25f;
-                        });
+                            std::erase_if(m_velocities, [controllerVec](auto const& v) {
+                                auto dist = jt::MathHelper::length(controllerVec - v);
+                                return dist < 0.25f;
+                            });
+                        }
                     }
                 }
             }
