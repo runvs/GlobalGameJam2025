@@ -43,6 +43,7 @@ void Exit::checkIfPlayerIsInExit(
         if (jt::MathHelper::checkIsIn(exitRect, positionToCheck)) {
             auto const nextLevelName = m_info.properties.strings["next_level"];
             getGame()->logger().info("switch to next level: " + nextLevelName, { "platformer" });
+            m_animation->play("expl");
             callback(nextLevelName);
         }
     }

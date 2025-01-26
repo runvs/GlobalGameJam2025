@@ -59,6 +59,9 @@ void PowerUp::checkIfPlayerIsInPowerUp(
         if (jt::MathHelper::checkIsIn(exitRect, positionToCheck)) {
             m_pickedUp = true;
             callback(m_type, this);
+
+            // only pick up the powerup once
+            break;
         }
     }
 }
