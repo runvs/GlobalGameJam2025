@@ -317,14 +317,12 @@ jt::Vector2f Player::getPosition() const { return m_physicsObject->getPosition()
 
 void Player::setPosition(jt::Vector2f const& pos) { m_physicsObject->setPosition(pos); }
 
-void Player::setVelocity(jt::Vector2f const& velocity) { m_physicsObject->setVelocity(velocity); }
+void Player::resetVelocity() const { m_physicsObject->setVelocity({ 0, 0 }); }
 
 void Player::setLevelSize(jt::Vector2f const& levelSizeInTiles)
 {
     m_levelSizeInTiles = levelSizeInTiles;
 }
-
-void Player::resetVelocity() const { m_physicsObject->setVelocity({ 0, 0 }); }
 
 bool Player::isInBubble() const { return m_bubbleVolume >= 0.0f; }
 

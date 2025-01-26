@@ -25,11 +25,9 @@ public:
     jt::Vector2f getPosOnScreen() const;
     jt::Vector2f getPosition() const;
     void setPosition(jt::Vector2f const& pos);
-    void setVelocity(jt::Vector2f const& velocity);
+    void resetVelocity() const;
 
     void setLevelSize(jt::Vector2f const& levelSizeInTiles);
-
-    void resetVelocity() const;
 
     bool isInBubble() const;
 

@@ -181,7 +181,7 @@ void StateGame::handleCheats(float const elapsed)
     if (keyboard->justPressed(jt::KeyCode::J)) {
         std::cerr << "cheats: J" << std::endl;
         auto const worldPos = mouse->getMousePositionWorld();
-        m_player->setVelocity({ 0.0f, 0.0f });
+        m_player->resetVelocity();
         m_player->setPosition(worldPos);
     }
 
