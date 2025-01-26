@@ -60,13 +60,18 @@ void Killbox::doDraw() const
             m_drawableL->update(0.0f);
             m_drawableL->draw(renderTarget());
 
-            auto numberOfMiddlePartsX = std::max(0, static_cast<int>(m_rect.width) / 16 - 2);
+            auto numberOfPartsX = static_cast<int>(m_rect.width) / 16;
+            auto numberOfMiddlePartsX = std::max(0, numberOfPartsX - 2);
 
             for (int i = 0; i != numberOfMiddlePartsX; ++i) {
                 m_drawableM->setPosition(
                     jt::Vector2f { m_rect.left + (i + 1) * 16.0f, m_rect.top + 0.0f });
                 m_drawableM->update(0.0f);
                 m_drawableM->draw(renderTarget());
+            }
+
+            if (numberOfPartsX <= 1) {
+                break;
             }
             m_drawableR->setPosition(jt::Vector2f {
                 m_rect.left + (numberOfMiddlePartsX + 1) * 16.0f, m_rect.top + 0.0f });
@@ -80,13 +85,18 @@ void Killbox::doDraw() const
             m_drawableT->update(0.0f);
             m_drawableT->draw(renderTarget());
 
-            auto numberOfMiddlePartsY = std::max(0, static_cast<int>(m_rect.height) / 16 - 2);
+            auto numberOfPartsY = static_cast<int>(m_rect.height) / 16;
+            auto numberOfMiddlePartsY = std::max(0, numberOfPartsY - 2);
 
             for (int j = 0; j != numberOfMiddlePartsY; ++j) {
                 m_drawableM->setPosition(
                     jt::Vector2f { m_rect.left + i * 16.0f, m_rect.top + (j + 1) * 16.0f });
                 m_drawableM->update(0.0f);
                 m_drawableM->draw(renderTarget());
+            }
+
+            if (numberOfPartsY <= 1) {
+                break;
             }
             m_drawableB->setPosition(jt::Vector2f {
                 m_rect.left + i * 16.0f, m_rect.top + (numberOfMiddlePartsY + 1) * 16.0f });
