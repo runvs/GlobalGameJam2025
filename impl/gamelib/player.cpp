@@ -184,7 +184,8 @@ void Player::updateAnimation(float const elapsed)
                 m_animation->play("fall", 0, false);
             }
         }
-        if (m_bubble->getCurrentAnimationName() != "pop") {
+        if (m_bubble->getCurrentAnimationName() != "pop"
+            && m_bubble->getCurrentAnimationName() != "pop2") {
 
             auto snd = getGame()->audio().addTemporarySound("event:/sfx/explode");
             snd->play();
@@ -332,6 +333,13 @@ void Player::setLevelSize(jt::Vector2f const& levelSizeInTiles)
 
 bool Player::isInBubble() const { return m_bubbleVolume >= 0.0f; }
 
+void Player::pickUpBubble()
+{
+    setBubbleVolume(1.0f);
+    m_animation->play("idle");
+    m_timeSinceFallStart = 0.0f;
+}
+
 void Player::setBubbleVolume(float volume) { m_bubbleVolume = volume; }
 
 void Player::addPatches()
@@ -351,3 +359,9 @@ void Player::setPatchUsedCallback(std::function<void()> const& callback)
 }
 
 void Player::resetPuncturePoints() { m_puncturePoints.clear(); }
+
+void Player::popBubble()
+{
+    setBubbleVolume(-1.0f);
+    m_bubble->play("pop2");
+}

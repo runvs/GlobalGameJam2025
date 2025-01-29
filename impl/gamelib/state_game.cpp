@@ -61,7 +61,7 @@ void StateGame::onCreate()
 
     m_world->getContactManager().registerCallback("player_ground0", playerGroundContactListener);
 
-    auto playerEnemyContactListener = std::make_shared<ContactCallbackPlayerEnemy>();
+    auto playerEnemyContactListener = std::make_shared<ContactCallbackBubbleKillbox>();
     playerEnemyContactListener->setPlayer(m_player);
     m_world->getContactManager().registerCallback("player_enemy1", playerEnemyContactListener);
 
@@ -153,7 +153,7 @@ void StateGame::onUpdate(float const elapsed)
         m_level->checkIfPlayerIsInPowerup(
             m_player->getPosition(), [this](ePowerUpType t, PowerUp* pu) {
                 if (pu->getPowerUpType() == ePowerUpType::SOAP) {
-                    m_player->setBubbleVolume(1.0f);
+                    m_player->pickUpBubble();
                 } else if (pu->getPowerUpType() == ePowerUpType::PATCH) {
                     m_player->addPatches();
                     m_hud->addPatches(

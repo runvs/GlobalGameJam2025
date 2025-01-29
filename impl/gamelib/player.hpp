@@ -30,12 +30,14 @@ public:
 
     bool isInBubble() const;
 
+    void pickUpBubble();
     void setBubbleVolume(float volume);
 
     void addPatches();
     void setAvailablePatches(int numberOfAvailablePatches);
     void setPatchUsedCallback(std::function<void()> const& callback);
     void resetPuncturePoints();
+    void popBubble();
 
 private:
     std::shared_ptr<jt::Animation> m_animation;

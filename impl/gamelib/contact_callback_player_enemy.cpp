@@ -4,13 +4,13 @@
 
 #include <iostream>
 
-void ContactCallbackPlayerEnemy::setPlayer(std::weak_ptr<Player> player) { m_player = player; }
+void ContactCallbackBubbleKillbox::setPlayer(std::weak_ptr<Player> player) { m_player = player; }
 
-void ContactCallbackPlayerEnemy::setEnabled(bool enabled) { m_enabled = enabled; }
+void ContactCallbackBubbleKillbox::setEnabled(bool enabled) { m_enabled = enabled; }
 
-bool ContactCallbackPlayerEnemy::getEnabled() const { return m_enabled; }
+bool ContactCallbackBubbleKillbox::getEnabled() const { return m_enabled; }
 
-void ContactCallbackPlayerEnemy::onBeginContact(b2Contact* contact)
+void ContactCallbackBubbleKillbox::onBeginContact(b2Contact* contact)
 {
     auto p = m_player.lock();
     if (!p) {
@@ -24,19 +24,20 @@ void ContactCallbackPlayerEnemy::onBeginContact(b2Contact* contact)
     bool optionB = isBubbleFixture(fb) && isKillboxFixture(fa);
 
     if (optionA || optionB) {
-        p->setBubbleVolume(-1.0f);
+
+        p->popBubble();
     }
 }
 
-void ContactCallbackPlayerEnemy::onEndContact(b2Contact* /*contact*/) { }
+void ContactCallbackBubbleKillbox::onEndContact(b2Contact* /*contact*/) { }
 
-bool ContactCallbackPlayerEnemy::isBubbleFixture(b2Fixture* fa) const
+bool ContactCallbackBubbleKillbox::isBubbleFixture(b2Fixture* fa) const
 {
     void* fixtureUserData = fa->GetUserData();
     return (std::uint64_t)fixtureUserData == g_userDataPlayerBubbleID;
 }
 
-bool ContactCallbackPlayerEnemy::isKillboxFixture(b2Fixture* fa) const
+bool ContactCallbackBubbleKillbox::isKillboxFixture(b2Fixture* fa) const
 {
     void* fixtureUserData = fa->GetUserData();
     return (std::uint64_t)fixtureUserData == g_userDataKillboxID;

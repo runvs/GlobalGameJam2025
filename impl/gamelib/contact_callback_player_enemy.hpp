@@ -5,7 +5,7 @@
 #include <box2dwrapper/box2d_contact_callback_interface.hpp>
 #include <memory>
 
-class ContactCallbackPlayerEnemy : public jt::Box2DContactCallbackInterface {
+class ContactCallbackBubbleKillbox : public jt::Box2DContactCallbackInterface {
 public:
     void setPlayer(std::weak_ptr<Player> player);
     void setEnabled(bool enabled) override;
